@@ -36,8 +36,12 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-gray-900 border-cyan-500/30 max-w-md shadow-[0_0_50px_rgba(0,217,255,0.3)]">
         <DialogHeader>
-          <div className="mx-auto w-16 h-16 bg-black border-2 border-cyan-400 rounded-2xl flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(0,217,255,0.5)]">
-            <Wallet className="w-8 h-8 text-cyan-400" />
+          <div className="mx-auto w-20 h-20 flex items-center justify-center mb-4">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/1c72e6aaf_image.png" 
+              alt="Flux Kmail Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           <DialogTitle className="text-3xl font-bold text-cyan-400 text-center">
             Welcome to Flux Kmail
