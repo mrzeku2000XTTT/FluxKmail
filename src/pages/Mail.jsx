@@ -208,7 +208,7 @@ export default function Mail() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png)' }}>
       <div className="h-screen flex flex-col bg-black/60 backdrop-blur-sm overflow-hidden">
-      <Header 
+        <Header 
         walletAddress={walletAddress}
         onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         searchQuery={searchQuery}
@@ -217,7 +217,7 @@ export default function Mail() {
         onDisconnect={handleWalletDisconnect}
       />
 
-      <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden">
         {sidebarOpen && (
           <Sidebar
             activeFolder={activeFolder}
@@ -268,9 +268,9 @@ export default function Mail() {
             </>
           )}
         </main>
-      </div>
+        </div>
 
-      <ComposeModal
+        <ComposeModal
         isOpen={showCompose}
         onClose={() => {
           setShowCompose(false);
