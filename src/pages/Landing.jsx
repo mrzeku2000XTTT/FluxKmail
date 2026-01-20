@@ -9,7 +9,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png)' }}>
-      <div className="min-h-screen bg-black/60 backdrop-blur-sm">
+      <div className="min-h-screen bg-black/40">
         {/* Header */}
         <header className="border-b border-cyan-500/20 bg-black/40 backdrop-blur-md sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -157,7 +157,8 @@ export default function Landing() {
         {/* Footer */}
         <footer className="border-t border-cyan-500/20 bg-black/40 backdrop-blur-md py-8">
           <div className="max-w-7xl mx-auto px-6 text-center text-gray-400">
-            <p>&copy; 2026 Flux Kmail. Decentralized messaging for everyone.</p>
+            <p className="mb-2">Built for Kaspa</p>
+            <p className="text-sm">Powered by TTT</p>
           </div>
         </footer>
 
