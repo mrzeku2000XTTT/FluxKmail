@@ -109,6 +109,9 @@ export default function Header({
             </div>
             <DropdownMenuItem className="py-3">View on Explorer</DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-purple-600 font-medium">
+              Switch Account
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-red-600">
               Disconnect Wallet
             </DropdownMenuItem>
