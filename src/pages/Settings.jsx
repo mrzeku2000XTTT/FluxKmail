@@ -7,8 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Upload, Camera, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { createPageUrl } from './utils';
 import { Link } from 'react-router-dom';
+import { createPageUrl } from '../utils';
 
 export default function Settings() {
   const [walletAddress, setWalletAddress] = useState(null);
