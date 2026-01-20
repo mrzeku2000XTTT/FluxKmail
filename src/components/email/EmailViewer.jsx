@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
   ArrowLeft, Star, Archive, Trash2, Clock, MoreVertical,
-  Reply, Forward, Printer, ExternalLink, Paperclip, Download
+  Reply, Forward, Printer, ExternalLink, Paperclip, Download, Coins
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
@@ -56,7 +56,16 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
         <div className="max-w-4xl">
           {/* Subject */}
           <div className="flex items-start justify-between mb-6">
-            <h1 className="text-2xl font-normal text-white">{email.subject}</h1>
+            <div className="flex-1">
+              <h1 className="text-2xl font-normal text-white mb-3">{email.subject}</h1>
+              {email.kas_amount && email.kas_amount > 0 && (
+                <div className="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-4 py-2 w-fit shadow-[0_0_15px_rgba(0,217,255,0.2)]">
+                  <Coins className="w-5 h-5 text-cyan-400" />
+                  <span className="text-cyan-400 font-semibold text-lg">{email.kas_amount} KAS</span>
+                  <span className="text-gray-400 text-sm">sent with this email</span>
+                </div>
+              )}
+            </div>
             <button 
               onClick={() => onStar(email)}
               className="p-2 hover:bg-cyan-500/20 rounded-full transition-colors flex-shrink-0"
