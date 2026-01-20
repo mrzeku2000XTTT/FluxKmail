@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
-  Menu, Search, HelpCircle, Settings, Grid3X3, X, SlidersHorizontal 
+  Menu, Search, HelpCircle, Settings, Grid3X3, X, SlidersHorizontal, Wallet 
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -12,25 +12,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { base44 } from '@/api/base44Client';
-
 export default function Header({ 
-  user, 
+  walletAddress,
   onMenuToggle, 
   searchQuery, 
   onSearchChange,
-  onSearch
+  onSearch,
+  onDisconnect
 }) {
   const [isFocused, setIsFocused] = useState(false);
 
-  const initials = user?.full_name
-    ?.split(' ')
-    .map(n => n[0])
-    .join('')
-    .toUpperCase() || 'U';
+  const shortAddress = walletAddress 
+    ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+    : '';
 
-  const handleLogout = () => {
-    base44.auth.logout();
+  const handleDisconnect = () => {
+    if (onDisconnect) {
+      onDisconnect();
+    }
   };
 
   return (
@@ -45,14 +44,10 @@ export default function Header({
       </Button>
 
       <a href="/" className="flex items-center gap-2 mr-4">
-        <svg viewBox="0 0 75 24" className="h-6">
-          <path fill="#EA4335" d="M7.5 12.5L0 6v12z"/>
-          <path fill="#34A853" d="M22.5 6L15 12.5 22.5 19z"/>
-          <path fill="#FBBC04" d="M22.5 6H7.5l7.5 6.5z"/>
-          <path fill="#4285F4" d="M7.5 6v13l7.5-6.5z"/>
-          <path fill="#C5221F" d="M7.5 19h15L15 12.5z"/>
-        </svg>
-        <span className="text-[22px] text-gray-600 font-normal">Gmail</span>
+        <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+          <span className="text-white font-bold text-lg">K</span>
+        </div>
+        <span className="text-[22px] bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent font-semibold">Kmail</span>
       </a>
 
       <div className={`flex-1 max-w-2xl relative transition-all duration-200 ${
@@ -99,30 +94,23 @@ export default function Header({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full ml-2">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={user?.avatar} />
-                <AvatarFallback className="bg-[#1A73E8] text-white text-sm">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
+            <Button variant="ghost" className="rounded-full ml-2 px-4 bg-gradient-to-r from-purple-100 to-blue-100 hover:from-purple-200 hover:to-blue-200">
+              <Wallet className="w-4 h-4 mr-2 text-purple-600" />
+              <span className="text-sm font-medium text-gray-700">{shortAddress}</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
+          <DropdownMenuContent align="end" className="w-72">
             <div className="p-4 text-center border-b">
-              <Avatar className="w-16 h-16 mx-auto mb-3">
-                <AvatarImage src={user?.avatar} />
-                <AvatarFallback className="bg-[#1A73E8] text-white text-xl">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
-              <p className="font-medium">{user?.full_name}</p>
-              <p className="text-sm text-gray-500">{user?.email}</p>
+              <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
+                <Wallet className="w-8 h-8 text-white" />
+              </div>
+              <p className="font-medium">Connected Wallet</p>
+              <p className="text-sm text-gray-500 break-all">{walletAddress}</p>
             </div>
-            <DropdownMenuItem className="py-3">Manage your Google Account</DropdownMenuItem>
+            <DropdownMenuItem className="py-3">View on Explorer</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="py-3 text-red-600">
-              Sign out
+            <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-red-600">
+              Disconnect Wallet
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -14,7 +14,7 @@ export default function ComposeModal({
   replyTo = null,
   isSending = false 
 }) {
-  const [to, setTo] = useState(replyTo?.from_email || '');
+  const [to, setTo] = useState(replyTo?.from_wallet || replyTo?.from_email || '');
   const [subject, setSubject] = useState(replyTo ? `Re: ${replyTo.subject}` : '');
   const [body, setBody] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
@@ -79,7 +79,7 @@ export default function ComposeModal({
                   value={to}
                   onChange={(e) => setTo(e.target.value)}
                   className="border-0 focus-visible:ring-0 rounded-none text-sm"
-                  placeholder="Recipients"
+                  placeholder="Wallet address"
                 />
               </div>
               <div className="flex items-center">

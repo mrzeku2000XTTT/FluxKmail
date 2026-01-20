@@ -76,7 +76,7 @@ export default function EmailList({
               "w-48 truncate text-sm",
               !email.is_read && "font-semibold text-gray-900"
             )}>
-              {email.from_name || email.from_email}
+              {email.from_name || (email.from_wallet ? `${email.from_wallet.slice(0, 8)}...${email.from_wallet.slice(-6)}` : email.from_email)}
             </span>
 
             <div className="flex-1 min-w-0 flex items-baseline gap-2">

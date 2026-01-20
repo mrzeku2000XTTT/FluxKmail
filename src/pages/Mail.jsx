@@ -8,9 +8,10 @@ import EmailToolbar from '@/components/email/EmailToolbar';
 import EmailList from '@/components/email/EmailList';
 import EmailViewer from '@/components/email/EmailViewer';
 import ComposeModal from '@/components/email/ComposeModal';
+import ConnectWallet from '@/components/wallet/ConnectWallet';
 
 export default function Mail() {
-  const [user, setUser] = useState(null);
+  const [walletAddress, setWalletAddress] = useState(null);
   const [activeFolder, setActiveFolder] = useState('inbox');
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [selectedEmails, setSelectedEmails] = useState([]);
@@ -22,23 +23,46 @@ export default function Mail() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const loadUser = async () => {
-      const userData = await base44.auth.me();
-      setUser(userData);
-    };
-    loadUser();
+    const savedWallet = localStorage.getItem('kmail_wallet');
+    if (savedWallet) {
+      setWalletAddress(savedWallet);
+    }
   }, []);
+
+  const handleWalletConnect = (address) => {
+    setWalletAddress(address);
+    localStorage.setItem('kmail_wallet', address);
+  };
+
+  const handleWalletDisconnect = () => {
+    setWalletAddress(null);
+    localStorage.removeItem('kmail_wallet');
+    queryClient.clear();
+  };
 
   // Fetch emails
   const { data: emails = [], isLoading, refetch, isRefetching } = useQuery({
-    queryKey: ['emails', activeFolder, searchQuery],
+    queryKey: ['emails', activeFolder, searchQuery, walletAddress],
     queryFn: async () => {
+      if (!walletAddress) return [];
+      
       let filter = {};
       
       if (activeFolder === 'starred') {
         filter.is_starred = true;
+        filter.to_wallet = walletAddress;
+      } else if (activeFolder === 'sent') {
+        filter.folder = 'sent';
+        filter.from_wallet = walletAddress;
       } else if (activeFolder !== 'all') {
         filter.folder = activeFolder;
+        filter.to_wallet = walletAddress;
+      } else {
+        // Show both sent and received
+        const sent = await base44.entities.Email.filter({ from_wallet: walletAddress }, '-created_date');
+        const received = await base44.entities.Email.filter({ to_wallet: walletAddress }, '-created_date');
+        const allEmails = [...sent, ...received];
+        return allEmails.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
       }
       
       const allEmails = await base44.entities.Email.filter(filter, '-created_date');
@@ -48,36 +72,43 @@ export default function Mail() {
         return allEmails.filter(email => 
           email.subject?.toLowerCase().includes(query) ||
           email.from_name?.toLowerCase().includes(query) ||
-          email.from_email?.toLowerCase().includes(query) ||
+          email.from_wallet?.toLowerCase().includes(query) ||
           email.body?.toLowerCase().includes(query)
         );
       }
       
       return allEmails;
-    }
+    },
+    enabled: !!walletAddress
   });
 
   // Fetch labels
   const { data: labels = [] } = useQuery({
     queryKey: ['labels'],
-    queryFn: () => base44.entities.Label.list()
+    queryFn: () => base44.entities.Label.list(),
+    enabled: !!walletAddress
   });
 
   // Calculate folder counts
   const { data: folderCounts = {} } = useQuery({
-    queryKey: ['folderCounts'],
+    queryKey: ['folderCounts', walletAddress],
     queryFn: async () => {
-      const allEmails = await base44.entities.Email.filter({});
+      if (!walletAddress) return {};
+      
+      const allReceived = await base44.entities.Email.filter({ to_wallet: walletAddress });
+      const allSent = await base44.entities.Email.filter({ from_wallet: walletAddress });
+      
       const counts = {
-        inbox: allEmails.filter(e => e.folder === 'inbox' && !e.is_read).length,
-        starred: allEmails.filter(e => e.is_starred).length,
-        sent: allEmails.filter(e => e.folder === 'sent').length,
-        drafts: allEmails.filter(e => e.folder === 'drafts').length,
-        spam: allEmails.filter(e => e.folder === 'spam').length,
-        trash: allEmails.filter(e => e.folder === 'trash').length,
+        inbox: allReceived.filter(e => e.folder === 'inbox' && !e.is_read).length,
+        starred: allReceived.filter(e => e.is_starred).length,
+        sent: allSent.filter(e => e.folder === 'sent').length,
+        drafts: allReceived.filter(e => e.folder === 'drafts').length,
+        spam: allReceived.filter(e => e.folder === 'spam').length,
+        trash: allReceived.filter(e => e.folder === 'trash').length,
       };
       return counts;
-    }
+    },
+    enabled: !!walletAddress
   });
 
   // Update email mutation
@@ -103,9 +134,9 @@ export default function Mail() {
   const sendEmailMutation = useMutation({
     mutationFn: async (emailData) => {
       return base44.entities.Email.create({
-        from_email: user?.email,
-        from_name: user?.full_name,
-        to_email: emailData.to,
+        from_wallet: walletAddress,
+        from_name: emailData.fromName || '',
+        to_wallet: emailData.to,
         subject: emailData.subject,
         body: emailData.body.replace(/\n/g, '<br>'),
         preview: emailData.body.substring(0, 100),
@@ -123,7 +154,7 @@ export default function Mail() {
 
   const handleSelectEmail = async (email) => {
     setSelectedEmail(email);
-    if (!email.is_read) {
+    if (!email.is_read && email.to_wallet === walletAddress) {
       updateEmailMutation.mutate({ id: email.id, data: { is_read: true } });
     }
   };
@@ -170,14 +201,19 @@ export default function Mail() {
     setShowCompose(true);
   };
 
+  if (!walletAddress) {
+    return <ConnectWallet onConnect={handleWalletConnect} />;
+  }
+
   return (
     <div className="h-screen flex flex-col bg-[#F6F8FC] overflow-hidden">
       <Header 
-        user={user}
+        walletAddress={walletAddress}
         onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onSearch={() => refetch()}
+        onDisconnect={handleWalletDisconnect}
       />
 
       <div className="flex-1 flex overflow-hidden">

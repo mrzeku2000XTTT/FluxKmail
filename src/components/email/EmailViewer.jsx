@@ -11,18 +11,17 @@ import { cn } from "@/lib/utils";
 export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }) {
   if (!email) return null;
 
-  const initials = (email.from_name || email.from_email)
-    .split(' ')
-    .map(n => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
+  const displayName = email.from_name || (email.from_wallet ? `${email.from_wallet.slice(0, 8)}...${email.from_wallet.slice(-6)}` : email.from_email);
+  const initials = email.from_name 
+    ? email.from_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : (email.from_wallet ? email.from_wallet.slice(0, 2).toUpperCase() : 'U');
 
   const avatarColors = [
     'bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 
     'bg-orange-500', 'bg-pink-500', 'bg-teal-500'
   ];
-  const colorIndex = email.from_email.charCodeAt(0) % avatarColors.length;
+  const addressForColor = email.from_wallet || email.from_email || 'default';
+  const colorIndex = addressForColor.charCodeAt(0) % avatarColors.length;
 
   return (
     <div className="flex-1 flex flex-col bg-white overflow-hidden">
@@ -84,14 +83,14 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="font-medium text-gray-900">
-                  {email.from_name || email.from_email.split('@')[0]}
+                  {email.from_name || (email.from_wallet ? `${email.from_wallet.slice(0, 8)}...` : email.from_email?.split('@')[0])}
                 </span>
-                <span className="text-sm text-gray-500">
-                  &lt;{email.from_email}&gt;
+                <span className="text-sm text-gray-500 break-all">
+                  {email.from_wallet || email.from_email}
                 </span>
               </div>
               <div className="text-sm text-gray-500 mt-0.5">
-                to {email.to_name || email.to_email || 'me'}
+                to {email.to_name || (email.to_wallet ? `${email.to_wallet.slice(0, 8)}...${email.to_wallet.slice(-6)}` : email.to_email || 'me')}
               </div>
             </div>
 
