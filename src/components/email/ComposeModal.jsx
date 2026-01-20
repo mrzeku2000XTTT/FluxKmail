@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   X, Minus, Maximize2, Paperclip, Link, Smile, 
-  MoreVertical, Trash2, Send
+  MoreVertical, Trash2, Send, Coins
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,13 +18,35 @@ export default function ComposeModal({
   const [subject, setSubject] = useState(replyTo ? `Re: ${replyTo.subject}` : '');
   const [body, setBody] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
+  const [kasAmount, setKasAmount] = useState('');
+  const [showKasInput, setShowKasInput] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!to || !subject) return;
-    onSend({ to, subject, body });
+
+    // Send KAS if amount is specified
+    if (kasAmount && parseFloat(kasAmount) > 0) {
+      try {
+        if (!window.kasware) {
+          alert('Kasware wallet not detected');
+          return;
+        }
+
+        const txid = await window.kasware.sendKaspa(to, Math.floor(parseFloat(kasAmount) * 100000000));
+        console.log('KAS sent, txid:', txid);
+      } catch (err) {
+        console.error('Failed to send KAS:', err);
+        alert('Failed to send KAS: ' + err.message);
+        return;
+      }
+    }
+
+    onSend({ to, subject, body, kasAmount: kasAmount || null });
     setTo('');
     setSubject('');
     setBody('');
+    setKasAmount('');
+    setShowKasInput(false);
   };
 
   if (!isOpen) return null;
@@ -114,7 +136,36 @@ export default function ComposeModal({
                   {isSending ? 'Sending...' : 'Send'}
                   <Send className="w-4 h-4 ml-2" />
                 </Button>
-                <div className="flex items-center ml-2">
+                <div className="flex items-center ml-2 gap-2">
+                  {showKasInput ? (
+                    <div className="flex items-center gap-2 bg-gray-800 rounded-full px-3 py-1 border border-cyan-500/30">
+                      <Coins className="w-4 h-4 text-cyan-400" />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={kasAmount}
+                        onChange={(e) => setKasAmount(e.target.value)}
+                        placeholder="0.00"
+                        className="w-20 h-6 border-0 bg-transparent text-white text-sm p-0 focus-visible:ring-0"
+                      />
+                      <span className="text-cyan-400 text-xs">KAS</span>
+                      <button 
+                        onClick={() => { setShowKasInput(false); setKasAmount(''); }}
+                        className="hover:bg-cyan-500/20 rounded-full p-1"
+                      >
+                        <X className="w-3 h-3 text-gray-400" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => setShowKasInput(true)}
+                      className="p-2 hover:bg-cyan-500/20 rounded-full"
+                      title="Send KAS with message"
+                    >
+                      <Coins className="w-5 h-5 text-cyan-400" />
+                    </button>
+                  )}
                   <button className="p-2 hover:bg-cyan-500/20 rounded-full">
                     <Paperclip className="w-5 h-5 text-cyan-400" />
                   </button>
