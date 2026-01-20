@@ -45,6 +45,7 @@ export default function ComposeModal({
       }
     }
 
+    // Send the email with KAS amount
     onSend({ to, subject, body, kasAmount: kasAmount || null });
     setTo('');
     setSubject('');

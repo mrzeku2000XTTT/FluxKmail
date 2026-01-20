@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import Header from '@/components/email/Header';
 import Sidebar from '@/components/email/Sidebar';
@@ -133,6 +134,8 @@ export default function Mail() {
   // Send email mutation
   const sendEmailMutation = useMutation({
     mutationFn: async (emailData) => {
+      const kasAmount = emailData.kasAmount ? parseFloat(emailData.kasAmount) : null;
+      
       // Create sent email
       await base44.entities.Email.create({
         from_wallet: walletAddress,
@@ -142,7 +145,8 @@ export default function Mail() {
         body: emailData.body.replace(/\n/g, '<br>'),
         preview: emailData.body.substring(0, 100),
         folder: 'sent',
-        is_read: true
+        is_read: true,
+        kas_amount: kasAmount
       });
       
       // Create received email for recipient
@@ -154,14 +158,22 @@ export default function Mail() {
         body: emailData.body.replace(/\n/g, '<br>'),
         preview: emailData.body.substring(0, 100),
         folder: 'inbox',
-        is_read: false
+        is_read: false,
+        kas_amount: kasAmount
       });
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['emails'] });
       queryClient.invalidateQueries({ queryKey: ['folderCounts'] });
       setShowCompose(false);
       setReplyTo(null);
+      
+      // Show success toast with KAS amount if sent
+      if (variables.kasAmount && parseFloat(variables.kasAmount) > 0) {
+        toast.success(`Email sent with ${variables.kasAmount} KAS!`);
+      } else {
+        toast.success('Email sent successfully!');
+      }
     }
   });
 
