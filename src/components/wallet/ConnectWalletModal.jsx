@@ -21,8 +21,8 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
       const accounts = await window.kasware.requestAccounts();
       if (accounts && accounts.length > 0) {
         const address = accounts[0];
-        localStorage.setItem('walletAddress', address);
-        localStorage.setItem('isWalletConnected', 'true');
+        localStorage.setItem('kmail_wallet', address);
+        onClose();
         window.location.reload();
       }
     } catch (err) {
@@ -36,9 +36,9 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-gray-900 border-cyan-500/30 max-w-md shadow-[0_0_50px_rgba(0,217,255,0.3)]">
         <DialogHeader>
-          <div className="mx-auto w-20 h-20 flex items-center justify-center mb-4">
+          <div className="mx-auto w-32 h-32 flex items-center justify-center mb-6">
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/1c72e6aaf_image.png" 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/a1024d7d4_image.png" 
               alt="Flux Kmail Logo" 
               className="w-full h-full object-contain"
             />

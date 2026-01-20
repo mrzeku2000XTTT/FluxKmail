@@ -133,7 +133,8 @@ export default function Mail() {
   // Send email mutation
   const sendEmailMutation = useMutation({
     mutationFn: async (emailData) => {
-      return base44.entities.Email.create({
+      // Create sent email
+      await base44.entities.Email.create({
         from_wallet: walletAddress,
         from_name: emailData.fromName || '',
         to_wallet: emailData.to,
@@ -142,6 +143,18 @@ export default function Mail() {
         preview: emailData.body.substring(0, 100),
         folder: 'sent',
         is_read: true
+      });
+      
+      // Create received email for recipient
+      return base44.entities.Email.create({
+        from_wallet: walletAddress,
+        from_name: emailData.fromName || '',
+        to_wallet: emailData.to,
+        subject: emailData.subject,
+        body: emailData.body.replace(/\n/g, '<br>'),
+        preview: emailData.body.substring(0, 100),
+        folder: 'inbox',
+        is_read: false
       });
     },
     onSuccess: () => {
