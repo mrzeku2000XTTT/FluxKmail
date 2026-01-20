@@ -8,11 +8,10 @@ import EmailToolbar from '@/components/email/EmailToolbar';
 import EmailList from '@/components/email/EmailList';
 import EmailViewer from '@/components/email/EmailViewer';
 import ComposeModal from '@/components/email/ComposeModal';
-import Landing from './Landing';
+import ConnectWallet from '@/components/wallet/ConnectWallet';
 
 export default function Mail() {
   const [walletAddress, setWalletAddress] = useState(null);
-  const [showLanding, setShowLanding] = useState(true);
   const [activeFolder, setActiveFolder] = useState('inbox');
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [selectedEmails, setSelectedEmails] = useState([]);
@@ -27,7 +26,6 @@ export default function Mail() {
     const savedWallet = localStorage.getItem('kmail_wallet');
     if (savedWallet) {
       setWalletAddress(savedWallet);
-      setShowLanding(false);
     }
   }, []);
 
@@ -203,32 +201,23 @@ export default function Mail() {
     setShowCompose(true);
   };
 
-  if (showLanding || !walletAddress) {
-    return <Landing />;
+  if (!walletAddress) {
+    return <ConnectWallet onConnect={handleWalletConnect} />;
   }
 
   return (
-    <div 
-      className="h-screen flex flex-col overflow-hidden relative"
-      style={{
-        backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      <div className="absolute inset-0 bg-black/60 z-0" />
-      <div className="relative z-10 h-full flex flex-col">
-        <Header 
-          walletAddress={walletAddress}
-          onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onSearch={() => refetch()}
-          onDisconnect={handleWalletDisconnect}
-        />
+    <div className="h-screen flex flex-col overflow-hidden bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png)' }}>
+      <div className="h-screen flex flex-col bg-black/60 backdrop-blur-sm overflow-hidden">
+      <Header 
+        walletAddress={walletAddress}
+        onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={() => refetch()}
+        onDisconnect={handleWalletDisconnect}
+      />
 
-        <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
         {sidebarOpen && (
           <Sidebar
             activeFolder={activeFolder}
@@ -291,7 +280,6 @@ export default function Mail() {
         replyTo={replyTo}
         isSending={sendEmailMutation.isPending}
       />
-      </div>
     </div>
   );
 }
