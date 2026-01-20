@@ -44,10 +44,11 @@ export default function Header({
       </Button>
 
       <a href="/" className="flex items-center gap-2 mr-4">
-        <div className="w-8 h-8 bg-black border-2 border-cyan-400 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.5)]">
-          <span className="text-cyan-400 font-bold text-lg">K</span>
-        </div>
-        <span className="text-[22px] text-cyan-400 font-semibold tracking-wide">Kmail</span>
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/925d1c391_image.png"
+          alt="Flux Kmail"
+          className="h-10 w-auto"
+        />
       </a>
 
       <div className={`flex-1 max-w-2xl relative transition-all duration-200 ${
