@@ -8,7 +8,7 @@ import EmailToolbar from '@/components/email/EmailToolbar';
 import EmailList from '@/components/email/EmailList';
 import EmailViewer from '@/components/email/EmailViewer';
 import ComposeModal from '@/components/email/ComposeModal';
-import ConnectWallet from '@/components/wallet/ConnectWallet';
+import Landing from './Landing';
 
 export default function Mail() {
   const [walletAddress, setWalletAddress] = useState(null);
@@ -202,7 +202,7 @@ export default function Mail() {
   };
 
   if (!walletAddress) {
-    return <ConnectWallet onConnect={handleWalletConnect} />;
+    return <Landing />;
   }
 
   return (
