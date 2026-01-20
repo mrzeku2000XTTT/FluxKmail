@@ -65,16 +65,19 @@ export default function ConnectWallet({ onConnect }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-2xl">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,217,255,0.1),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,217,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,217,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      
+      <Card className="w-full max-w-md shadow-[0_0_50px_rgba(0,217,255,0.3)] bg-gray-900 border-cyan-500/30 relative z-10">
         <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-4">
-            <Wallet className="w-8 h-8 text-white" />
+          <div className="mx-auto w-16 h-16 bg-black border-2 border-cyan-400 rounded-2xl flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(0,217,255,0.5)]">
+            <Wallet className="w-8 h-8 text-cyan-400" />
           </div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <CardTitle className="text-3xl font-bold text-cyan-400">
             Welcome to Kmail
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-base text-gray-400">
             Connect your Kasware wallet to access your decentralized mailbox
           </CardDescription>
         </CardHeader>
@@ -82,11 +85,11 @@ export default function ConnectWallet({ onConnect }) {
           <Button
             onClick={connectKasware}
             disabled={isConnecting}
-            className="w-full h-12 text-base bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+            className="w-full h-12 text-base bg-cyan-500 hover:bg-cyan-400 text-black font-semibold shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:shadow-[0_0_30px_rgba(0,217,255,0.7)] transition-all"
           >
             {isConnecting ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
                 Connecting...
               </>
             ) : (
@@ -98,20 +101,20 @@ export default function ConnectWallet({ onConnect }) {
           </Button>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-800">{error}</p>
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <p className="text-sm text-red-400">{error}</p>
             </div>
           )}
 
-          <div className="pt-4 border-t">
+          <div className="pt-4 border-t border-cyan-500/20">
             <a
               href="https://kasware.xyz/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center justify-center gap-2 text-sm text-gray-400 hover:text-cyan-400 transition-colors"
             >
               Don't have Kasware?
-              <span className="text-purple-600 font-medium flex items-center gap-1">
+              <span className="text-cyan-400 font-medium flex items-center gap-1">
                 Get it here <ExternalLink className="w-3 h-3" />
               </span>
             </a>

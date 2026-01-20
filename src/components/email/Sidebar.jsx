@@ -23,13 +23,13 @@ export default function Sidebar({
   folderCounts = {}
 }) {
   return (
-    <aside className="w-64 h-full bg-[#F6F8FC] flex flex-col py-4 px-3">
+    <aside className="w-64 h-full bg-black border-r border-cyan-500/20 flex flex-col py-4 px-3">
       <Button 
         onClick={onCompose}
-        className="mb-4 rounded-2xl bg-white hover:bg-gray-50 text-gray-700 shadow-md hover:shadow-lg transition-all duration-200 border-0 h-14 px-6 flex items-center gap-3"
+        className="mb-4 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-black shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:shadow-[0_0_30px_rgba(0,217,255,0.7)] transition-all duration-200 border-0 h-14 px-6 flex items-center gap-3"
       >
-        <Pencil className="w-5 h-5 text-gray-600" />
-        <span className="text-base font-medium">Compose</span>
+        <Pencil className="w-5 h-5 text-black" />
+        <span className="text-base font-semibold">Compose</span>
       </Button>
 
       <nav className="flex-1 space-y-0.5">
@@ -45,21 +45,21 @@ export default function Sidebar({
               className={cn(
                 "w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm",
                 isActive 
-                  ? "bg-[#D3E3FD] text-[#001D35] font-semibold" 
-                  : "text-gray-700 hover:bg-gray-200/60"
+                  ? "bg-cyan-500/20 text-cyan-400 font-semibold border-r-2 border-cyan-400 shadow-[0_0_15px_rgba(0,217,255,0.3)]" 
+                  : "text-gray-400 hover:bg-cyan-500/10 hover:text-cyan-400"
               )}
             >
-              <Icon className={cn("w-5 h-5", isActive && "text-[#001D35]")} />
+              <Icon className={cn("w-5 h-5", isActive && "text-cyan-400")} />
               <span className="flex-1 text-left">{folder.name}</span>
               {count > 0 && (
-                <span className="text-xs font-semibold">{count}</span>
+                <span className="text-xs font-semibold text-cyan-400 bg-cyan-500/20 px-2 py-0.5 rounded-full">{count}</span>
               )}
             </button>
           );
         })}
 
         <div className="pt-6 pb-2 px-4">
-          <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
+          <button className="flex items-center gap-2 text-sm text-gray-400 hover:text-cyan-400">
             <ChevronDown className="w-4 h-4" />
             <span className="font-medium">Labels</span>
           </button>
@@ -68,14 +68,14 @@ export default function Sidebar({
         {labels.map((label) => (
           <button
             key={label.id}
-            className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-700 hover:bg-gray-200/60"
+            className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-400 hover:bg-cyan-500/10 hover:text-cyan-400"
           >
-            <Tag className="w-5 h-5" style={{ color: label.color }} />
+            <Tag className="w-5 h-5 text-cyan-400" />
             <span className="flex-1 text-left">{label.name}</span>
           </button>
         ))}
 
-        <button className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-500 hover:bg-gray-200/60">
+        <button className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-500 hover:bg-cyan-500/10 hover:text-cyan-400">
           <Plus className="w-5 h-5" />
           <span>Create new label</span>
         </button>

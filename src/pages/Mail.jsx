@@ -206,7 +206,7 @@ export default function Mail() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[#F6F8FC] overflow-hidden">
+    <div className="h-screen flex flex-col bg-black overflow-hidden">
       <Header 
         walletAddress={walletAddress}
         onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -234,7 +234,7 @@ export default function Mail() {
           />
         )}
 
-        <main className="flex-1 flex flex-col bg-white rounded-tl-2xl overflow-hidden shadow-sm">
+        <main className="flex-1 flex flex-col bg-gray-900 rounded-tl-2xl overflow-hidden shadow-[0_0_20px_rgba(0,217,255,0.2)] border-t border-l border-cyan-500/20">
           {selectedEmail ? (
             <EmailViewer
               email={selectedEmail}

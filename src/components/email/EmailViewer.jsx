@@ -24,30 +24,30 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
   const colorIndex = addressForColor.charCodeAt(0) % avatarColors.length;
 
   return (
-    <div className="flex-1 flex flex-col bg-white overflow-hidden">
+    <div className="flex-1 flex flex-col bg-black overflow-hidden">
       {/* Toolbar */}
-      <div className="flex items-center gap-1 px-4 py-2 border-b border-gray-200">
-        <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full">
-          <ArrowLeft className="w-5 h-5" />
+      <div className="flex items-center gap-1 px-4 py-2 border-b border-cyan-500/20">
+        <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full hover:bg-cyan-500/20">
+          <ArrowLeft className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Archive className="w-5 h-5" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <Archive className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full" onClick={onDelete}>
-          <Trash2 className="w-5 h-5" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20" onClick={onDelete}>
+          <Trash2 className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Clock className="w-5 h-5" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <Clock className="w-5 h-5 text-cyan-400" />
         </Button>
         <div className="flex-1" />
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Printer className="w-5 h-5" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <Printer className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <ExternalLink className="w-5 h-5" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <ExternalLink className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <MoreVertical className="w-5 h-5" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <MoreVertical className="w-5 h-5 text-cyan-400" />
         </Button>
       </div>
 
@@ -56,17 +56,17 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
         <div className="max-w-4xl">
           {/* Subject */}
           <div className="flex items-start justify-between mb-6">
-            <h1 className="text-2xl font-normal text-gray-900">{email.subject}</h1>
+            <h1 className="text-2xl font-normal text-white">{email.subject}</h1>
             <button 
               onClick={() => onStar(email)}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+              className="p-2 hover:bg-cyan-500/20 rounded-full transition-colors flex-shrink-0"
             >
               <Star 
                 className={cn(
                   "w-5 h-5",
                   email.is_starred 
-                    ? "fill-[#F4B400] text-[#F4B400]" 
-                    : "text-gray-400"
+                    ? "fill-cyan-400 text-cyan-400" 
+                    : "text-gray-600 hover:text-cyan-400"
                 )} 
               />
             </button>
@@ -82,10 +82,10 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
 
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 flex-wrap">
-                <span className="font-medium text-gray-900">
+                <span className="font-medium text-cyan-400">
                   {email.from_name || (email.from_wallet ? `${email.from_wallet.slice(0, 8)}...` : email.from_email?.split('@')[0])}
                 </span>
-                <span className="text-sm text-gray-500 break-all">
+                <span className="text-sm text-gray-400 break-all">
                   {email.from_wallet || email.from_email}
                 </span>
               </div>
@@ -94,21 +94,21 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
               </div>
             </div>
 
-            <div className="text-sm text-gray-500 flex-shrink-0">
+            <div className="text-sm text-gray-400 flex-shrink-0">
               {format(new Date(email.created_date), 'MMM d, yyyy, h:mm a')}
             </div>
           </div>
 
           {/* Body */}
           <div 
-            className="prose prose-sm max-w-none text-gray-700 leading-relaxed"
+            className="prose prose-sm max-w-none text-gray-300 leading-relaxed prose-headings:text-white prose-a:text-cyan-400 prose-strong:text-white"
             dangerouslySetInnerHTML={{ __html: email.body }}
           />
 
           {/* Attachments */}
           {email.attachments?.length > 0 && (
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+            <div className="mt-8 pt-6 border-t border-cyan-500/20">
+              <h3 className="text-sm font-medium text-cyan-400 mb-3 flex items-center gap-2">
                 <Paperclip className="w-4 h-4" />
                 {email.attachments.length} Attachment{email.attachments.length > 1 ? 's' : ''}
               </h3>
@@ -119,22 +119,22 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
                     href={attachment.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 bg-gray-900 rounded-lg border border-cyan-500/30 hover:bg-cyan-500/10 hover:border-cyan-400 transition-colors"
                   >
-                    <div className="w-10 h-10 bg-[#EA4335] rounded flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">
+                    <div className="w-10 h-10 bg-cyan-500 rounded flex items-center justify-center">
+                      <span className="text-black text-xs font-bold">
                         {attachment.name.split('.').pop()?.toUpperCase()}
                       </span>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900 truncate max-w-[150px]">
+                      <p className="text-sm font-medium text-white truncate max-w-[150px]">
                         {attachment.name}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-400">
                         {attachment.size ? `${(attachment.size / 1024).toFixed(1)} KB` : 'Download'}
                       </p>
                     </div>
-                    <Download className="w-4 h-4 text-gray-400" />
+                    <Download className="w-4 h-4 text-cyan-400" />
                   </a>
                 ))}
               </div>
@@ -144,17 +144,17 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
       </div>
 
       {/* Reply Bar */}
-      <div className="px-6 py-4 border-t border-gray-200">
+      <div className="px-6 py-4 border-t border-cyan-500/20">
         <div className="max-w-4xl flex gap-3">
           <Button 
             variant="outline" 
             onClick={onReply}
-            className="rounded-full px-6"
+            className="rounded-full px-6 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400"
           >
             <Reply className="w-4 h-4 mr-2" />
             Reply
           </Button>
-          <Button variant="outline" className="rounded-full px-6">
+          <Button variant="outline" className="rounded-full px-6 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400">
             <Forward className="w-4 h-4 mr-2" />
             Forward
           </Button>

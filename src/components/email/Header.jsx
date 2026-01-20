@@ -33,7 +33,7 @@ export default function Header({
   };
 
   return (
-    <header className="h-16 bg-[#F6F8FC] flex items-center px-4 gap-2">
+    <header className="h-16 bg-black border-b border-cyan-500/20 flex items-center px-4 gap-2">
       <Button 
         variant="ghost" 
         size="icon" 
@@ -44,18 +44,18 @@ export default function Header({
       </Button>
 
       <a href="/" className="flex items-center gap-2 mr-4">
-        <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold text-lg">K</span>
+        <div className="w-8 h-8 bg-black border-2 border-cyan-400 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.5)]">
+          <span className="text-cyan-400 font-bold text-lg">K</span>
         </div>
-        <span className="text-[22px] bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent font-semibold">Kmail</span>
+        <span className="text-[22px] text-cyan-400 font-semibold tracking-wide">Kmail</span>
       </a>
 
       <div className={`flex-1 max-w-2xl relative transition-all duration-200 ${
-        isFocused ? 'shadow-lg' : ''
+        isFocused ? 'shadow-[0_0_20px_rgba(0,217,255,0.3)]' : ''
       }`}>
-        <div className={`flex items-center bg-${isFocused ? 'white' : '[#EAF1FB]'} rounded-full transition-colors`}>
+        <div className={`flex items-center ${isFocused ? 'bg-gray-900 border-cyan-500' : 'bg-gray-900/50 border-cyan-500/30'} border rounded-full transition-colors`}>
           <button className="p-3" onClick={onSearch}>
-            <Search className="w-5 h-5 text-gray-600" />
+            <Search className="w-5 h-5 text-cyan-400" />
           </button>
           <Input
             type="text"
@@ -65,54 +65,54 @@ export default function Header({
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-            className="flex-1 border-0 bg-transparent focus-visible:ring-0 text-base placeholder:text-gray-500"
+            className="flex-1 border-0 bg-transparent focus-visible:ring-0 text-base text-white placeholder:text-gray-400"
           />
           {searchQuery && (
             <button 
               onClick={() => onSearchChange('')}
-              className="p-2 hover:bg-gray-100 rounded-full mr-1"
+              className="p-2 hover:bg-cyan-500/20 rounded-full mr-1"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-cyan-400" />
             </button>
           )}
           <button className="p-3">
-            <SlidersHorizontal className="w-5 h-5 text-gray-600" />
+            <SlidersHorizontal className="w-5 h-5 text-cyan-400" />
           </button>
         </div>
       </div>
 
       <div className="flex items-center gap-1 ml-auto">
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <HelpCircle className="w-5 h-5 text-gray-600" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <HelpCircle className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Settings className="w-5 h-5 text-gray-600" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <Settings className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Grid3X3 className="w-5 h-5 text-gray-600" />
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+          <Grid3X3 className="w-5 h-5 text-cyan-400" />
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="rounded-full ml-2 px-4 bg-gradient-to-r from-purple-100 to-blue-100 hover:from-purple-200 hover:to-blue-200">
-              <Wallet className="w-4 h-4 mr-2 text-purple-600" />
-              <span className="text-sm font-medium text-gray-700">{shortAddress}</span>
+            <Button variant="ghost" className="rounded-full ml-2 px-4 bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 hover:shadow-[0_0_15px_rgba(0,217,255,0.3)]">
+              <Wallet className="w-4 h-4 mr-2 text-cyan-400" />
+              <span className="text-sm font-medium text-cyan-400">{shortAddress}</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-72">
-            <div className="p-4 text-center border-b">
-              <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                <Wallet className="w-8 h-8 text-white" />
+          <DropdownMenuContent align="end" className="w-72 bg-gray-900 border-cyan-500/30">
+            <div className="p-4 text-center border-b border-cyan-500/20">
+              <div className="w-16 h-16 mx-auto mb-3 bg-black border-2 border-cyan-400 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.5)]">
+                <Wallet className="w-8 h-8 text-cyan-400" />
               </div>
-              <p className="font-medium">Connected Wallet</p>
-              <p className="text-sm text-gray-500 break-all">{walletAddress}</p>
+              <p className="font-medium text-white">Connected Wallet</p>
+              <p className="text-sm text-cyan-400 break-all">{walletAddress}</p>
             </div>
-            <DropdownMenuItem className="py-3">View on Explorer</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-purple-600 font-medium">
+            <DropdownMenuItem className="py-3 text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400">View on Explorer</DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-cyan-500/20" />
+            <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-cyan-400 font-medium hover:bg-cyan-500/20">
               Switch Account
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-red-600">
+            <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-red-400 hover:bg-red-500/20">
               Disconnect Wallet
             </DropdownMenuItem>
           </DropdownMenuContent>
