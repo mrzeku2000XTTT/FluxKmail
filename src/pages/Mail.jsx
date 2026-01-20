@@ -280,6 +280,7 @@ export default function Mail() {
         replyTo={replyTo}
         isSending={sendEmailMutation.isPending}
       />
+      </div>
     </div>
   );
 }
