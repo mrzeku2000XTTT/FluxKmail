@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import EmailAIChat from './EmailAIChat';
 import { 
   ArrowLeft, Star, Archive, Trash2, Clock, MoreVertical,
   Reply, Forward, Printer, ExternalLink, Paperclip, Download, Coins
@@ -9,19 +9,16 @@ import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
 
 export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }) {
+  const [walletAddress, setWalletAddress] = useState(null);
+
+  useEffect(() => {
+    const savedWallet = localStorage.getItem('kmail_wallet');
+    if (savedWallet) {
+      setWalletAddress(savedWallet);
+    }
+  }, []);
+
   if (!email) return null;
-
-  const displayName = email.from_name || (email.from_wallet ? `${email.from_wallet.slice(0, 8)}...${email.from_wallet.slice(-6)}` : email.from_email);
-  const initials = email.from_name 
-    ? email.from_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-    : (email.from_wallet ? email.from_wallet.slice(0, 2).toUpperCase() : 'U');
-
-  const avatarColors = [
-    'bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 
-    'bg-orange-500', 'bg-pink-500', 'bg-teal-500'
-  ];
-  const addressForColor = email.from_wallet || email.from_email || 'default';
-  const colorIndex = addressForColor.charCodeAt(0) % avatarColors.length;
 
   return (
     <div className="flex-1 flex flex-col bg-black overflow-hidden">
@@ -83,12 +80,6 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
 
           {/* Sender Info */}
           <div className="flex items-start gap-4 mb-6">
-            <Avatar className={cn("w-10 h-10", avatarColors[colorIndex])}>
-              <AvatarFallback className="text-white text-sm font-medium">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="font-medium text-cyan-400">
