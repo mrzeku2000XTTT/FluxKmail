@@ -169,6 +169,9 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
           </Button>
         </div>
       </div>
+
+      {/* AI Chat Assistant */}
+      {walletAddress && <EmailAIChat email={email} walletAddress={walletAddress} />}
     </div>
   );
 }
