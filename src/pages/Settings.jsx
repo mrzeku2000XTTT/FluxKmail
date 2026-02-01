@@ -45,11 +45,11 @@ export default function Settings() {
   }, []);
 
   // Fetch user profile
-  const { data: userProfile } = useQuery({
+  const { data: userProfile, isLoading } = useQuery({
     queryKey: ['userProfile', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return null;
-      const profiles = await base44.entities.User.filter({ wallet_address: walletAddress });
+      const profiles = await base44.entities.UserProfile.filter({ wallet_address: walletAddress });
       return profiles[0] || null;
     },
     enabled: !!walletAddress
@@ -67,9 +67,9 @@ export default function Settings() {
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
       if (userProfile) {
-        return base44.entities.User.update(userProfile.id, data);
+        return base44.entities.UserProfile.update(userProfile.id, data);
       } else {
-        return base44.entities.User.create({ ...data, wallet_address: walletAddress });
+        return base44.entities.UserProfile.create({ ...data, wallet_address: walletAddress });
       }
     },
     onSuccess: () => {
@@ -128,10 +128,15 @@ export default function Settings() {
     });
   };
 
-  if (!walletAddress) {
+  if (!walletAddress || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        <p>Please connect your wallet first</p>
+      <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png)' }}>
+        <div className="min-h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-cyan-400">Loading settings...</p>
+          </div>
+        </div>
       </div>
     );
   }
