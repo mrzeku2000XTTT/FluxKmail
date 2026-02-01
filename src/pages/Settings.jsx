@@ -124,8 +124,8 @@ export default function Settings() {
       const col = avatarPreset % 4;
       return {
         backgroundImage: `url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/4d544e35d_image.png)`,
-        backgroundSize: '400%',
-        backgroundPosition: `${col * 33.33}% ${row * 33.33}%`
+        backgroundSize: '400% 400%',
+        backgroundPosition: `${(col / 3) * 100}% ${(row / 3) * 100}%`
       };
     }
     return null;
