@@ -56,21 +56,6 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* Product Preview */}
-        <section className="max-w-7xl mx-auto px-6 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-4">What your decentralized inbox looks like</h2>
-            <p className="text-gray-400 text-lg">Clean, simple, and completely private</p>
-          </div>
-          <div className="rounded-2xl border-2 border-cyan-500/30 overflow-hidden shadow-[0_0_50px_rgba(0,217,255,0.3)] bg-black/40 backdrop-blur-md">
-            <img 
-              src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&h=600&fit=crop" 
-              alt="Inbox Preview" 
-              className="w-full opacity-80"
-            />
-          </div>
-        </section>
-
         {/* Features Section */}
         <section id="features" className="max-w-7xl mx-auto px-6 py-24">
           <div className="text-center mb-16">
