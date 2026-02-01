@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Upload, Camera, Save } from 'lucide-react';
+import { ArrowLeft, Upload, Camera, Save, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
+import AvatarSelector from '../components/settings/AvatarSelector';
 
 export default function Settings() {
   const [walletAddress, setWalletAddress] = useState(null);
@@ -19,6 +20,8 @@ export default function Settings() {
   const [tttAccount, setTttAccount] = useState(null);
   const [secondaryAddress, setSecondaryAddress] = useState('');
   const [tertiaryAddress, setTertiaryAddress] = useState('');
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const [avatarPreset, setAvatarPreset] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -60,6 +63,7 @@ export default function Settings() {
       setDisplayName(userProfile.display_name || '');
       setBio(userProfile.bio || '');
       setProfilePhoto(userProfile.profile_photo || '');
+      setAvatarPreset(userProfile.avatar_preset ?? null);
     }
   }, [userProfile]);
 
@@ -101,8 +105,30 @@ export default function Settings() {
     updateProfileMutation.mutate({
       display_name: displayName,
       bio: bio,
-      profile_photo: profilePhoto
+      profile_photo: profilePhoto,
+      avatar_preset: avatarPreset
     });
+  };
+
+  const handleAvatarSelect = (index) => {
+    setAvatarPreset(index);
+    setProfilePhoto('');
+    setShowAvatarSelector(false);
+    toast.success('Avatar selected!');
+  };
+
+  const getAvatarUrl = () => {
+    if (profilePhoto) return profilePhoto;
+    if (avatarPreset !== null) {
+      const row = Math.floor(avatarPreset / 4);
+      const col = avatarPreset % 4;
+      return {
+        backgroundImage: `url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/4d544e35d_image.png)`,
+        backgroundSize: '400%',
+        backgroundPosition: `${col * 33.33}% ${row * 33.33}%`
+      };
+    }
+    return null;
   };
 
   const updateSecurityMutation = useMutation({
@@ -162,12 +188,17 @@ export default function Settings() {
             {/* Profile Photo */}
             <div className="flex items-center gap-6 mb-8">
               <div className="relative">
-                <Avatar className="w-32 h-32 border-4 border-cyan-500/30">
-                  <AvatarImage src={profilePhoto} />
-                  <AvatarFallback className="bg-gray-800 text-cyan-400 text-3xl">
-                    {displayName?.charAt(0) || walletAddress?.charAt(0) || '?'}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="w-32 h-32 border-4 border-cyan-500/30 rounded-full overflow-hidden bg-gray-800">
+                  {profilePhoto ? (
+                    <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                  ) : avatarPreset !== null ? (
+                    <div className="w-full h-full" style={getAvatarUrl()} />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-cyan-400 text-3xl">
+                      {displayName?.charAt(0) || walletAddress?.charAt(0) || '?'}
+                    </div>
+                  )}
+                </div>
                 <label htmlFor="photo-upload" className="absolute bottom-0 right-0 p-2 bg-cyan-500 rounded-full cursor-pointer hover:bg-cyan-400 shadow-[0_0_15px_rgba(0,217,255,0.5)] transition-all">
                   <Camera className="w-5 h-5 text-black" />
                   <input
@@ -182,20 +213,41 @@ export default function Settings() {
               <div className="flex-1">
                 <p className="text-white font-medium mb-1">Profile Photo</p>
                 <p className="text-gray-400 text-sm mb-3">
-                  {isUploading ? 'Uploading...' : 'Click the camera icon to upload a new photo'}
+                  {isUploading ? 'Uploading...' : 'Choose a preset avatar or upload your own'}
                 </p>
-                {profilePhoto && (
+                <div className="flex gap-2 flex-wrap">
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
-                    onClick={() => setProfilePhoto('')}
-                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    onClick={() => setShowAvatarSelector(true)}
+                    className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400"
                   >
-                    Remove Photo
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Choose Preset
                   </Button>
-                )}
+                  {(profilePhoto || avatarPreset !== null) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setProfilePhoto('');
+                        setAvatarPreset(null);
+                      }}
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
+
+            <AvatarSelector
+              isOpen={showAvatarSelector}
+              onClose={() => setShowAvatarSelector(false)}
+              onSelect={handleAvatarSelect}
+              currentAvatar={avatarPreset}
+            />
 
             {/* Wallet Address */}
             <div className="mb-6">
