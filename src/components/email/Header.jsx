@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '../utils';
 import { 
   Menu, Search, HelpCircle, Settings, Grid3X3, X, SlidersHorizontal, Wallet 
 } from 'lucide-react';
@@ -88,11 +86,11 @@ export default function Header({
         <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
           <HelpCircle className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Link to={createPageUrl('Settings')}>
+        <a href="/Settings">
           <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
             <Settings className="w-5 h-5 text-cyan-400" />
           </Button>
-        </Link>
+        </a>
         <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
           <Grid3X3 className="w-5 h-5 text-cyan-400" />
         </Button>
