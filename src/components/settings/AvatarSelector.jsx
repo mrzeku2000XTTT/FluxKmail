@@ -20,31 +20,31 @@ export default function AvatarSelector({ isOpen, onClose, onSelect, currentAvata
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-gray-900 border-cyan-500/30">
+      <DialogContent className="max-w-2xl bg-gray-900 border-cyan-500/30 text-white">
         <DialogHeader>
           <DialogTitle className="text-2xl text-cyan-400">Choose Your Avatar</DialogTitle>
         </DialogHeader>
         
-        <div className="grid grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-4 gap-4 p-2">
           {avatars.map((index) => (
             <button
               key={index}
               onClick={() => onSelect(index)}
               className={cn(
-                "relative w-full aspect-square rounded-full overflow-hidden border-4 transition-all hover:scale-105",
+                "relative w-full aspect-square rounded-full overflow-hidden border-4 transition-all hover:scale-105 bg-gray-800",
                 currentAvatar === index 
                   ? "border-cyan-400 shadow-[0_0_20px_rgba(0,217,255,0.6)]" 
                   : "border-cyan-500/30 hover:border-cyan-400/50"
               )}
             >
               <div 
-                className="w-full h-full"
+                className="w-full h-full bg-cover bg-center"
                 style={getAvatarStyle(index)}
               />
               {currentAvatar === index && (
                 <div className="absolute inset-0 bg-cyan-400/20 flex items-center justify-center">
                   <div className="w-8 h-8 rounded-full bg-cyan-400 flex items-center justify-center">
-                    <span className="text-black font-bold">✓</span>
+                    <span className="text-black font-bold text-lg">✓</span>
                   </div>
                 </div>
               )}
