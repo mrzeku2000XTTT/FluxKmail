@@ -18,9 +18,15 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
         return;
       }
 
+      // Request accounts - this will open Kasware popup
       const accounts = await window.kasware.requestAccounts();
       if (accounts && accounts.length > 0) {
         const address = accounts[0];
+        
+        // Request signature for login authentication
+        const message = `Sign this message to log in to Flux Kmail\n\nWallet: ${address}\nTimestamp: ${Date.now()}`;
+        await window.kasware.signMessage(message);
+        
         localStorage.setItem('kmail_wallet', address);
         onClose();
         window.location.reload();
