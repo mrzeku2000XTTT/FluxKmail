@@ -24,6 +24,14 @@ export default function Sidebar({
 }) {
   return (
     <aside className="w-64 h-full bg-black border-r border-cyan-500/20 flex flex-col py-4 px-3">
+      <div className="flex justify-center mb-6">
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/7e6911f88_image.png" 
+          alt="Flux Kmail" 
+          className="w-32 h-32 object-contain"
+        />
+      </div>
+      
       <Button 
         onClick={onCompose}
         className="mb-4 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-black shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:shadow-[0_0_30px_rgba(0,217,255,0.7)] transition-all duration-200 border-0 h-14 px-6 flex items-center gap-3"
