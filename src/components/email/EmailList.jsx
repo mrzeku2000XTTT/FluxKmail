@@ -26,7 +26,11 @@ export default function EmailList({
     return (
       <div className="flex-1 flex items-center justify-center text-cyan-400/50">
         <div className="text-center">
-          <Paperclip className="w-16 h-16 mx-auto mb-4 opacity-30" />
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/1e8058cd2_image.png" 
+            alt="Flux Kmail" 
+            className="w-32 h-32 mx-auto mb-4 opacity-30"
+          />
           <p className="text-lg">No emails here</p>
         </div>
       </div>
