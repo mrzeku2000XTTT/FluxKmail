@@ -45,9 +45,9 @@ export default function Header({
 
       <a href="/" className="flex items-center gap-2 mr-4">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/925d1c391_image.png" 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/1e8058cd2_image.png" 
           alt="Flux Kmail" 
-          className="h-10"
+          className="h-14"
         />
       </a>
 
