@@ -16,13 +16,31 @@ export default function Settings() {
   const [bio, setBio] = useState('');
   const [profilePhoto, setProfilePhoto] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [tttAccount, setTttAccount] = useState(null);
+  const [secondaryAddress, setSecondaryAddress] = useState('');
+  const [tertiaryAddress, setTertiaryAddress] = useState('');
 
   const queryClient = useQueryClient();
 
   useEffect(() => {
     const savedWallet = localStorage.getItem('kmail_wallet');
+    const savedTTTAccount = localStorage.getItem('kmail_ttt_account');
+    const isNewRegistration = localStorage.getItem('kmail_new_registration');
+    
     if (savedWallet) {
       setWalletAddress(savedWallet);
+    }
+    
+    if (savedTTTAccount) {
+      const account = JSON.parse(savedTTTAccount);
+      setTttAccount(account);
+      setSecondaryAddress(account.secondary_kaspa_address || '');
+      setTertiaryAddress(account.tertiary_kaspa_address || '');
+      
+      if (isNewRegistration === 'true') {
+        toast.success('Welcome! Please add security addresses below.');
+        localStorage.removeItem('kmail_new_registration');
+      }
     }
   }, []);
 
@@ -84,6 +102,29 @@ export default function Settings() {
       display_name: displayName,
       bio: bio,
       profile_photo: profilePhoto
+    });
+  };
+
+  const updateSecurityMutation = useMutation({
+    mutationFn: async (data) => {
+      return base44.entities.TTTAccount.update(tttAccount.id, data);
+    },
+    onSuccess: (updatedAccount) => {
+      localStorage.setItem('kmail_ttt_account', JSON.stringify(updatedAccount));
+      setTttAccount(updatedAccount);
+      toast.success('Security addresses updated!');
+    },
+    onError: () => {
+      toast.error('Failed to update security addresses');
+    }
+  });
+
+  const handleUpdateSecurity = () => {
+    if (!tttAccount) return;
+    
+    updateSecurityMutation.mutate({
+      secondary_kaspa_address: secondaryAddress.trim() || null,
+      tertiary_kaspa_address: tertiaryAddress.trim() || null
     });
   };
 
@@ -201,9 +242,82 @@ export default function Settings() {
                 <Save className="w-4 h-4 ml-2" />
               </Button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+            </div>
+
+            {/* Security Addresses Section */}
+            {tttAccount && (
+            <div className="bg-gray-900 rounded-xl border border-cyan-500/30 shadow-[0_0_30px_rgba(0,217,255,0.2)] p-8 mt-6">
+              <h2 className="text-xl font-semibold text-white mb-2">Security Addresses</h2>
+              <p className="text-gray-400 text-sm mb-6">
+                Add additional Kaspa addresses to secure your account. These addresses provide extra verification layers.
+              </p>
+
+              {/* TTT ID Display */}
+              <div className="mb-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
+                <label className="block text-sm font-medium text-cyan-400 mb-2">
+                  Your TTT Agent ID
+                </label>
+                <Input
+                  value={tttAccount.ttt_id}
+                  disabled
+                  className="bg-gray-800 border-cyan-500/30 text-white font-mono cursor-not-allowed"
+                />
+              </div>
+
+              {/* Main Address */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-cyan-400 mb-2">
+                  Main Kaspa Address
+                </label>
+                <Input
+                  value={tttAccount.main_kaspa_address}
+                  disabled
+                  className="bg-gray-800 border-cyan-500/30 text-gray-400 cursor-not-allowed"
+                />
+              </div>
+
+              {/* Secondary Address */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-cyan-400 mb-2">
+                  2nd Kaspa Address (Optional)
+                </label>
+                <Input
+                  value={secondaryAddress}
+                  onChange={(e) => setSecondaryAddress(e.target.value)}
+                  placeholder="kaspa:... (optional)"
+                  className="bg-gray-800 border-cyan-500/30 text-white focus:border-cyan-500"
+                />
+              </div>
+
+              {/* Tertiary Address */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-cyan-400 mb-2">
+                  3rd Kaspa Address (Optional)
+                </label>
+                <Input
+                  value={tertiaryAddress}
+                  onChange={(e) => setTertiaryAddress(e.target.value)}
+                  placeholder="kaspa:... (optional)"
+                  className="bg-gray-800 border-cyan-500/30 text-white focus:border-cyan-500"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Additional addresses make your account harder to compromise
+                </p>
+              </div>
+
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleUpdateSecurity}
+                  disabled={updateSecurityMutation.isPending}
+                  className="bg-cyan-500 hover:bg-cyan-400 text-black font-semibold px-8 shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:shadow-[0_0_30px_rgba(0,217,255,0.7)]"
+                >
+                  {updateSecurityMutation.isPending ? 'Updating...' : 'Update Security'}
+                </Button>
+              </div>
+            </div>
+            )}
+            </div>
+            </div>
+            </div>
+            );
+            }

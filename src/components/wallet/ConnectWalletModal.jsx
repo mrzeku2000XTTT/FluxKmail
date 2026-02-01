@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Wallet, ExternalLink, Hash } from 'lucide-react';
+import TTTLoginForm from './TTTLoginForm';
 
 export default function ConnectWalletModal({ isOpen, onClose }) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
   const [useWallet, setUseWallet] = useState(true);
-  const [tttId, setTttId] = useState('');
 
   const connectKasware = async () => {
     setIsConnecting(true);
@@ -41,15 +40,13 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
     }
   };
 
-  const connectWithTTT = () => {
-    if (!tttId.trim()) {
-      setError('Please enter a valid TTT ID');
-      return;
-    }
-    
-    localStorage.setItem('kmail_wallet', `ttt:${tttId.trim()}`);
+  const handleTTTSuccess = () => {
     onClose();
     window.location.reload();
+  };
+
+  const handleTTTError = (errorMsg) => {
+    setError(errorMsg);
   };
 
   return (
@@ -133,25 +130,10 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
               </div>
             </>
           ) : (
-            <>
-              <div className="space-y-2">
-                <label className="text-sm text-gray-400">Enter your TTT ID</label>
-                <Input
-                  value={tttId}
-                  onChange={(e) => setTttId(e.target.value)}
-                  placeholder="e.g., user123"
-                  className="bg-gray-800 border-cyan-500/30 text-white focus:border-cyan-500"
-                  onKeyDown={(e) => e.key === 'Enter' && connectWithTTT()}
-                />
-              </div>
-              <Button
-                onClick={connectWithTTT}
-                className="w-full h-12 text-base bg-cyan-500 hover:bg-cyan-400 text-black font-semibold shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:shadow-[0_0_30px_rgba(0,217,255,0.7)] transition-all"
-              >
-                <Hash className="w-5 h-5 mr-2" />
-                Continue with TTT ID
-              </Button>
-            </>
+            <TTTLoginForm 
+              onSuccess={handleTTTSuccess}
+              onError={handleTTTError}
+            />
           )}
 
           {error && (
