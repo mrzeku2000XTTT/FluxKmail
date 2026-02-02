@@ -11,13 +11,10 @@ export default function AvatarSelector({ isOpen, onClose, onSelect, currentAvata
   const getAvatarStyle = (index) => {
     const row = Math.floor(index / 4);
     const col = index % 4;
-    // Calculate exact positions accounting for circular crop
-    const xPos = col * 25; // 100% / 4 columns = 25% per column
-    const yPos = row * 25; // 100% / 4 rows = 25% per row
     return {
       backgroundImage: `url(${AVATAR_GRID_URL})`,
-      backgroundSize: '400% 400%', // 4x4 grid
-      backgroundPosition: `${xPos}% ${yPos}%`
+      backgroundSize: '400% 400%',
+      backgroundPosition: `${(col / 3) * 100}% ${(row / 3) * 100}%`
     };
   };
 
