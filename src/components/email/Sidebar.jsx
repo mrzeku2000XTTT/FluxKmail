@@ -20,7 +20,9 @@ export default function Sidebar({
   onFolderChange, 
   onCompose, 
   labels = [],
-  folderCounts = {}
+  folderCounts = {},
+  onLabelClick,
+  onCreateLabel
 }) {
   return (
     <aside className="w-64 h-full bg-black border-r border-cyan-500/20 flex flex-col py-4 px-3">
