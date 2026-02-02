@@ -12,8 +12,7 @@ import ComposeModal from '@/components/email/ComposeModal';
 import Landing from './Landing';
 
 export default function Mail() {
-  const [walletAddress, setWalletAddress] = useState(null);
-  const [isCheckingWallet, setIsCheckingWallet] = useState(true);
+  const [walletAddress, setWalletAddress] = useState(() => localStorage.getItem('kmail_wallet'));
   const [activeFolder, setActiveFolder] = useState('inbox');
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [selectedEmails, setSelectedEmails] = useState([]);
@@ -23,14 +22,6 @@ export default function Mail() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const savedWallet = localStorage.getItem('kmail_wallet');
-    if (savedWallet) {
-      setWalletAddress(savedWallet);
-    }
-    setIsCheckingWallet(false);
-  }, []);
 
   const handleWalletConnect = (address) => {
     setWalletAddress(address);
@@ -227,14 +218,6 @@ export default function Mail() {
     setReplyTo(selectedEmail);
     setShowCompose(true);
   };
-
-  if (isCheckingWallet) {
-    return (
-      <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png)' }}>
-        <div className="min-h-screen bg-black/60 backdrop-blur-sm" />
-      </div>
-    );
-  }
 
   if (!walletAddress) {
     return <Landing />;
