@@ -78,6 +78,7 @@ export default function Sidebar({
         {labels.map((label) => (
           <button
             key={label.id}
+            onClick={() => onLabelClick && onLabelClick(label)}
             className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-400 hover:bg-cyan-500/10 hover:text-cyan-400"
           >
             <Tag className="w-5 h-5 text-cyan-400" />
@@ -85,7 +86,10 @@ export default function Sidebar({
           </button>
         ))}
 
-        <button className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-500 hover:bg-cyan-500/10 hover:text-cyan-400">
+        <button 
+          onClick={() => onCreateLabel && onCreateLabel()}
+          className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-500 hover:bg-cyan-500/10 hover:text-cyan-400"
+        >
           <Plus className="w-5 h-5" />
           <span>Create new label</span>
         </button>
