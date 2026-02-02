@@ -109,7 +109,7 @@ ${email.body.replace(/<br>/g, '\n').replace(/<[^>]*>/g, '')}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 w-[400px] h-[600px] bg-gray-900 rounded-2xl border border-cyan-500/30 shadow-[0_0_40px_rgba(0,217,255,0.4)] flex flex-col z-50"
+            className="fixed bottom-2 md:bottom-6 right-2 md:right-6 left-2 md:left-auto w-auto md:w-[400px] h-[calc(100vh-8rem)] md:h-[600px] max-h-[600px] bg-gray-900 rounded-2xl border border-cyan-500/30 shadow-[0_0_40px_rgba(0,217,255,0.4)] flex flex-col z-50"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-cyan-500/30 bg-gradient-to-r from-cyan-500/10 to-blue-600/10">
