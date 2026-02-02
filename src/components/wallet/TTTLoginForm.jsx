@@ -28,7 +28,7 @@ export default function TTTLoginForm({ onSuccess, onError }) {
 
     setIsLoading(true);
     try {
-      const accounts = await base44.entities.TTTAccount.filter({ ttt_id: tttId.trim() });
+      const accounts = await base44.entities.TTTAccount.filter({ ttt_id: tttId.trim().toUpperCase() });
       
       if (accounts.length === 0) {
         onError('Account not found. Please register first.');
@@ -45,7 +45,7 @@ export default function TTTLoginForm({ onSuccess, onError }) {
         return;
       }
 
-      localStorage.setItem('kmail_ttt_id', tttId.trim());
+      localStorage.setItem('kmail_ttt_id', tttId.trim().toUpperCase());
       localStorage.setItem('kmail_wallet', account.main_kaspa_address);
       localStorage.setItem('kmail_ttt_account', JSON.stringify(account));
       onSuccess();
@@ -65,7 +65,7 @@ export default function TTTLoginForm({ onSuccess, onError }) {
     setIsLoading(true);
     try {
       // Check if TTT ID already exists
-      const existing = await base44.entities.TTTAccount.filter({ ttt_id: tttId.trim() });
+      const existing = await base44.entities.TTTAccount.filter({ ttt_id: tttId.trim().toUpperCase() });
       
       if (existing.length > 0) {
         onError(`TTT ID "${tttId}" is already claimed. Please login instead.`);
@@ -75,12 +75,12 @@ export default function TTTLoginForm({ onSuccess, onError }) {
 
       // Create new account
       const newAccount = await base44.entities.TTTAccount.create({
-        ttt_id: tttId.trim(),
+        ttt_id: tttId.trim().toUpperCase(),
         password: password, // In production, hash this
         main_kaspa_address: kaspaAddress.trim()
       });
 
-      localStorage.setItem('kmail_ttt_id', tttId.trim());
+      localStorage.setItem('kmail_ttt_id', tttId.trim().toUpperCase());
       localStorage.setItem('kmail_wallet', kaspaAddress.trim());
       localStorage.setItem('kmail_ttt_account', JSON.stringify(newAccount));
       localStorage.setItem('kmail_new_registration', 'true');
