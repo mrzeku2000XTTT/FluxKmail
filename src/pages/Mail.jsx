@@ -9,6 +9,7 @@ import EmailToolbar from '@/components/email/EmailToolbar';
 import EmailList from '@/components/email/EmailList';
 import EmailViewer from '@/components/email/EmailViewer';
 import ComposeModal from '@/components/email/ComposeModal';
+import CreateLabelModal from '@/components/email/CreateLabelModal';
 import Landing from './Landing';
 
 export default function Mail() {
@@ -20,6 +21,7 @@ export default function Mail() {
   const [replyTo, setReplyTo] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showCreateLabel, setShowCreateLabel] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -121,6 +123,15 @@ export default function Mail() {
       queryClient.invalidateQueries({ queryKey: ['emails'] });
       queryClient.invalidateQueries({ queryKey: ['folderCounts'] });
       setSelectedEmail(null);
+    }
+  });
+
+  // Create label mutation
+  const createLabelMutation = useMutation({
+    mutationFn: (labelData) => base44.entities.Label.create(labelData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['labels'] });
+      toast.success('Label created successfully!');
     }
   });
 
@@ -260,6 +271,7 @@ export default function Mail() {
             }}
             labels={labels}
             folderCounts={folderCounts}
+            onCreateLabel={() => setShowCreateLabel(true)}
           />
         )}
 
@@ -309,6 +321,12 @@ export default function Mail() {
         replyTo={replyTo}
         isSending={sendEmailMutation.isPending}
       />
+
+        <CreateLabelModal
+          isOpen={showCreateLabel}
+          onClose={() => setShowCreateLabel(false)}
+          onCreateLabel={(data) => createLabelMutation.mutate(data)}
+        />
       </div>
     </div>
   );
