@@ -14,7 +14,8 @@ export default function ComposeModal({
   onClose, 
   onSend, 
   replyTo = null,
-  isSending = false 
+  isSending = false,
+  onSaveDraft 
 }) {
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
@@ -65,6 +66,20 @@ export default function ComposeModal({
     setShowKasInput(false);
   };
 
+  const handleClose = () => {
+    // Save as draft if there's content
+    if ((to || subject || body) && onSaveDraft) {
+      onSaveDraft({ to, subject, body, kasAmount: kasAmount || null });
+    }
+    // Clear fields
+    setTo('');
+    setSubject('');
+    setBody('');
+    setKasAmount('');
+    setShowKasInput(false);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -99,7 +114,7 @@ export default function ComposeModal({
               <Maximize2 className="w-4 h-4 text-cyan-400" />
             </button>
             <button 
-              onClick={onClose}
+              onClick={handleClose}
               className="p-1 hover:bg-cyan-500/20 rounded"
             >
               <X className="w-4 h-4 text-cyan-400" />
@@ -208,7 +223,7 @@ export default function ComposeModal({
                   <MoreVertical className="w-5 h-5 text-cyan-400" />
                 </button>
                 <button 
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="p-2 hover:bg-red-500/20 rounded-full"
                 >
                   <Trash2 className="w-5 h-5 text-red-400" />
