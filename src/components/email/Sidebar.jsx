@@ -25,7 +25,7 @@ export default function Sidebar({
   onCreateLabel
 }) {
   return (
-    <aside className="w-64 h-full bg-black border-r border-cyan-500/20 flex flex-col py-4 px-3">
+    <aside className="hidden md:flex w-64 h-full bg-black border-r border-cyan-500/20 flex-col py-4 px-3">
       <div className="flex justify-center mb-6">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/7e6911f88_image.png" 

@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 
 import Header from '@/components/email/Header';
 import Sidebar from '@/components/email/Sidebar';
+import BottomNav from '@/components/email/BottomNav';
 import EmailToolbar from '@/components/email/EmailToolbar';
 import EmailList from '@/components/email/EmailList';
 import EmailViewer from '@/components/email/EmailViewer';
@@ -256,7 +257,7 @@ export default function Mail() {
         onDisconnect={handleWalletDisconnect}
       />
 
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden pb-16 md:pb-0">
         {sidebarOpen && (
           <Sidebar
             activeFolder={activeFolder}
@@ -275,7 +276,7 @@ export default function Mail() {
           />
         )}
 
-        <main className="flex-1 flex flex-col bg-gray-900 rounded-tl-2xl overflow-hidden shadow-[0_0_20px_rgba(0,217,255,0.2)] border-t border-l border-cyan-500/20">
+        <main className="flex-1 flex flex-col bg-gray-900 md:rounded-tl-2xl overflow-hidden shadow-[0_0_20px_rgba(0,217,255,0.2)] md:border-t md:border-l border-cyan-500/20">
           {selectedEmail ? (
             <EmailViewer
               email={selectedEmail}
@@ -326,6 +327,20 @@ export default function Mail() {
           isOpen={showCreateLabel}
           onClose={() => setShowCreateLabel(false)}
           onCreateLabel={(data) => createLabelMutation.mutate(data)}
+        />
+
+        <BottomNav
+          activeFolder={activeFolder}
+          onFolderChange={(folder) => {
+            setActiveFolder(folder);
+            setSelectedEmail(null);
+            setSelectedEmails([]);
+          }}
+          onCompose={() => {
+            setReplyTo(null);
+            setShowCompose(true);
+          }}
+          folderCounts={folderCounts}
         />
       </div>
     </div>
