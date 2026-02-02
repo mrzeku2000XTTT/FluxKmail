@@ -202,9 +202,10 @@ export default function Mail() {
 
   const handleBulkDelete = () => {
     selectedEmails.forEach(id => {
-      deleteEmailMutation.mutate(id);
+      updateEmailMutation.mutate({ id, data: { folder: 'trash' } });
     });
     setSelectedEmails([]);
+    toast.success(`Moved ${selectedEmails.length} email(s) to trash`);
   };
 
   const handleBulkMarkRead = () => {
@@ -212,6 +213,15 @@ export default function Mail() {
       updateEmailMutation.mutate({ id, data: { is_read: true } });
     });
     setSelectedEmails([]);
+    toast.success('Marked as read');
+  };
+
+  const handleBulkSpam = () => {
+    selectedEmails.forEach(id => {
+      updateEmailMutation.mutate({ id, data: { folder: 'spam' } });
+    });
+    setSelectedEmails([]);
+    toast.success(`Moved ${selectedEmails.length} email(s) to spam`);
   };
 
   const handleReply = () => {

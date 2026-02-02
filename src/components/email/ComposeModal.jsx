@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   X, Minus, Maximize2, Paperclip, Link, Smile, 
-  MoreVertical, Trash2, Send, Coins
+  MoreVertical, Trash2, Send, Coins, Wallet, Copy
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 
 export default function ComposeModal({ 
   isOpen, 
@@ -14,12 +15,20 @@ export default function ComposeModal({
   replyTo = null,
   isSending = false 
 }) {
-  const [to, setTo] = useState(replyTo?.from_wallet || replyTo?.from_email || '');
-  const [subject, setSubject] = useState(replyTo ? `Re: ${replyTo.subject}` : '');
+  const [to, setTo] = useState('');
+  const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
   const [kasAmount, setKasAmount] = useState('');
   const [showKasInput, setShowKasInput] = useState(false);
+  const [showWalletIframe, setShowWalletIframe] = useState(false);
+
+  useEffect(() => {
+    if (replyTo) {
+      setTo(replyTo.from_wallet || '');
+      setSubject(replyTo.subject?.startsWith('Re:') ? replyTo.subject : `Re: ${replyTo.subject}`);
+    }
+  }, [replyTo]);
 
   const handleSend = async () => {
     if (!to || !subject) return;
@@ -164,6 +173,13 @@ export default function ComposeModal({
                     </div>
                   )}
                   <button 
+                    onClick={() => setShowWalletIframe(!showWalletIframe)}
+                    className={`p-2 hover:bg-cyan-500/20 rounded-full ${showWalletIframe ? 'bg-cyan-500/20' : ''}`}
+                    title="Open KcWallet"
+                  >
+                    <Wallet className="w-5 h-5 text-cyan-400" />
+                  </button>
+                  <button 
                     onClick={() => setShowKasInput(!showKasInput)}
                     className={`p-2 hover:bg-cyan-500/20 rounded-full ${showKasInput ? 'bg-cyan-500/20' : ''}`}
                     title="Send KAS with message"
@@ -196,6 +212,57 @@ export default function ComposeModal({
           </>
         )}
       </motion.div>
+
+      {/* KcWallet iframe */}
+      {showWalletIframe && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+          onClick={() => setShowWalletIframe(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-gray-900 rounded-lg border-2 border-cyan-500/30 shadow-[0_0_50px_rgba(0,217,255,0.4)] w-full max-w-4xl h-[80vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-cyan-500/30">
+              <div className="flex items-center gap-3">
+                <Wallet className="w-6 h-6 text-cyan-400" />
+                <h3 className="text-xl font-semibold text-cyan-400">KcWallet</h3>
+              </div>
+              {to && (
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(to);
+                    toast.success('Recipient address copied!');
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/50 transition-all"
+                >
+                  <Copy className="w-4 h-4 text-cyan-400" />
+                  <span className="text-cyan-400 text-sm font-mono">{to.slice(0, 12)}...{to.slice(-8)}</span>
+                </button>
+              )}
+              <button
+                onClick={() => setShowWalletIframe(false)}
+                className="p-2 hover:bg-cyan-500/20 rounded-full"
+              >
+                <X className="w-5 h-5 text-cyan-400" />
+              </button>
+            </div>
+            <div className="flex-1 relative">
+              <iframe
+                src="https://wallet.kaspa.com"
+                className="w-full h-full border-0"
+                title="KcWallet"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }
