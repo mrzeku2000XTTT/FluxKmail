@@ -34,21 +34,21 @@ export default function Header({
   };
 
   return (
-    <header className="h-16 bg-black border-b border-cyan-500/20 flex items-center px-4 gap-2">
+    <header className="h-16 bg-black border-b border-cyan-500/20 flex items-center px-2 md:px-4 gap-1 md:gap-2">
       <Button 
         variant="ghost" 
         size="icon" 
         onClick={onMenuToggle}
-        className="rounded-full"
+        className="rounded-full hidden md:flex"
       >
         <Menu className="w-5 h-5 text-gray-600" />
       </Button>
 
-      <a href="/" className="flex items-center gap-2 mr-4">
+      <a href="/" className="flex items-center gap-2 mr-2 md:mr-4 flex-shrink-0">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/7e6911f88_image.png" 
           alt="Flux Kmail" 
-          className="h-12"
+          className="h-8 md:h-12"
         />
       </a>
 
@@ -56,46 +56,46 @@ export default function Header({
         isFocused ? 'shadow-[0_0_20px_rgba(0,217,255,0.3)]' : ''
       }`}>
         <div className={`flex items-center ${isFocused ? 'bg-gray-900 border-cyan-500' : 'bg-gray-900/50 border-cyan-500/30'} border rounded-full transition-colors`}>
-          <button className="p-3" onClick={onSearch}>
-            <Search className="w-5 h-5 text-cyan-400" />
+          <button className="p-2 md:p-3" onClick={onSearch}>
+            <Search className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
           </button>
           <Input
             type="text"
-            placeholder="Search mail"
+            placeholder="Search"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-            className="flex-1 border-0 bg-transparent focus-visible:ring-0 text-base text-white placeholder:text-gray-400"
+            className="flex-1 border-0 bg-transparent focus-visible:ring-0 text-sm md:text-base text-white placeholder:text-gray-400"
           />
           {searchQuery && (
             <button 
               onClick={() => onSearchChange('')}
-              className="p-2 hover:bg-cyan-500/20 rounded-full mr-1"
+              className="p-1 md:p-2 hover:bg-cyan-500/20 rounded-full mr-1"
             >
-              <X className="w-5 h-5 text-cyan-400" />
+              <X className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
             </button>
           )}
-          <button className="p-3">
+          <button className="p-2 md:p-3 hidden md:block">
             <SlidersHorizontal className="w-5 h-5 text-cyan-400" />
           </button>
         </div>
       </div>
 
       <div className="flex items-center gap-1 ml-auto">
-        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20 hidden md:flex">
           <HelpCircle className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20 hidden md:flex">
           <Grid3X3 className="w-5 h-5 text-cyan-400" />
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="rounded-full ml-2 px-4 bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 hover:shadow-[0_0_15px_rgba(0,217,255,0.3)]">
-              <Wallet className="w-4 h-4 mr-2 text-cyan-400" />
-              <span className="text-sm font-medium text-cyan-400">{shortAddress}</span>
+            <Button variant="ghost" className="rounded-full ml-1 md:ml-2 px-2 md:px-4 bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 hover:shadow-[0_0_15px_rgba(0,217,255,0.3)]">
+              <Wallet className="w-3 h-3 md:w-4 md:h-4 md:mr-2 text-cyan-400" />
+              <span className="text-xs md:text-sm font-medium text-cyan-400 hidden sm:inline">{shortAddress}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-72 bg-gray-900 border-cyan-500/30">
