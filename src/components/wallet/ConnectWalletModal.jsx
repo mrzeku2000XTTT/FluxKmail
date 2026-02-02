@@ -31,7 +31,7 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
         
         localStorage.setItem('kmail_wallet', address);
         onClose();
-        setTimeout(() => window.location.reload(), 100);
+        window.location.reload();
       }
     } catch (err) {
       setError(err.message || 'Failed to connect wallet');
@@ -42,7 +42,7 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
 
   const handleTTTSuccess = () => {
     onClose();
-    setTimeout(() => window.location.reload(), 100);
+    window.location.reload();
   };
 
   const handleTTTError = (errorMsg) => {
