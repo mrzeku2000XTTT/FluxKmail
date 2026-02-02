@@ -281,7 +281,7 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
       </div>
 
       {/* AI Chat Assistant */}
-      {walletAddress && showAIChat && <EmailAIChat email={email} walletAddress={walletAddress} />}
+      {walletAddress && <EmailAIChat email={email} walletAddress={walletAddress} isOpen={showAIChat} onOpenChange={setShowAIChat} />}
     </div>
   );
 }

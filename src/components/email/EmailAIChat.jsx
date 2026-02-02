@@ -6,8 +6,7 @@ import { Bot, Send, X, Loader2, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function EmailAIChat({ email, walletAddress }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function EmailAIChat({ email, walletAddress, isOpen, onOpenChange }) {
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -103,14 +102,6 @@ ${email.body.replace(/<br>/g, '\n').replace(/<[^>]*>/g, '')}
 
   return (
     <>
-      {/* AI Chat Button */}
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 rounded-full w-14 h-14 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_30px_rgba(0,217,255,0.6)] hover:shadow-[0_0_40px_rgba(0,217,255,0.8)] z-50"
-      >
-        <Bot className="w-6 h-6 text-white" />
-      </Button>
-
       {/* Chat Panel */}
       <AnimatePresence>
         {isOpen && (
@@ -134,7 +125,7 @@ ${email.body.replace(/<br>/g, '\n').replace(/<[^>]*>/g, '')}
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsOpen(false)}
+                onClick={() => onOpenChange(false)}
                 className="rounded-full hover:bg-cyan-500/20"
               >
                 <X className="w-5 h-5 text-cyan-400" />
