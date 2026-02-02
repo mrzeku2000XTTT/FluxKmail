@@ -73,8 +73,8 @@ export default function ComposeModal({
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 50, opacity: 0 }}
-        className={`fixed bottom-0 right-6 w-[580px] bg-gray-900 rounded-t-lg shadow-[0_0_30px_rgba(0,217,255,0.3)] border border-cyan-500/30 z-50 flex flex-col ${
-          isMinimized ? 'h-12' : 'h-[500px]'
+        className={`fixed bottom-0 right-2 sm:right-6 w-full sm:w-[580px] max-w-[calc(100vw-1rem)] bg-gray-900 rounded-t-lg shadow-[0_0_30px_rgba(0,217,255,0.3)] border border-cyan-500/30 z-50 flex flex-col ${
+          isMinimized ? 'h-12' : 'h-[500px] max-h-[70vh]'
         }`}
       >
         {/* Header */}
@@ -179,7 +179,11 @@ export default function ComposeModal({
                     className={`p-2 hover:bg-cyan-500/20 rounded-full ${showWalletIframe ? 'bg-cyan-500/20' : ''}`}
                     title="Open KcWallet"
                   >
-                    <Wallet className="w-5 h-5 text-cyan-400" />
+                    <img 
+                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/3d8e4b064_image.png" 
+                      alt="KcWallet" 
+                      className="w-5 h-5"
+                    />
                   </button>
                   <button 
                     onClick={() => setShowKasInput(!showKasInput)}
@@ -227,25 +231,30 @@ export default function ComposeModal({
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-gray-900 rounded-lg border-2 border-cyan-500/30 shadow-[0_0_50px_rgba(0,217,255,0.4)] w-full max-w-4xl h-[80vh] flex flex-col"
+            className="bg-gray-900 rounded-lg border-2 border-cyan-500/30 shadow-[0_0_50px_rgba(0,217,255,0.4)] w-full max-w-4xl max-h-[85vh] h-[600px] sm:h-[80vh] flex flex-col mx-2"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 border-b border-cyan-500/30">
-              <div className="flex items-center gap-3">
-                <Wallet className="w-6 h-6 text-cyan-400" />
-                <h3 className="text-xl font-semibold text-cyan-400">KcWallet</h3>
+            <div className="flex items-center justify-between p-3 sm:p-4 border-b border-cyan-500/30">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/3d8e4b064_image.png" 
+                  alt="KcWallet" 
+                  className="w-6 h-6 sm:w-8 sm:h-8"
+                />
+                <h3 className="text-lg sm:text-xl font-semibold text-cyan-400">KcWallet</h3>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
                 {to && (
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(to);
                       toast.success('Recipient address copied!');
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/50 transition-all"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/50 transition-all text-xs sm:text-sm"
                   >
-                    <Copy className="w-4 h-4 text-cyan-400" />
-                    <span className="text-cyan-400 text-sm font-mono">{to.slice(0, 12)}...{to.slice(-8)}</span>
+                    <Copy className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400" />
+                    <span className="text-cyan-400 font-mono hidden sm:inline">{to.slice(0, 12)}...{to.slice(-8)}</span>
+                    <span className="text-cyan-400 font-mono sm:hidden">{to.slice(0, 8)}...</span>
                   </button>
                 )}
                 <button
@@ -253,24 +262,25 @@ export default function ComposeModal({
                     e.stopPropagation();
                     setShowContacts(true);
                   }}
-                  className="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 rounded-lg text-black font-semibold transition-all shadow-[0_0_15px_rgba(0,217,255,0.5)]"
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 bg-cyan-500 hover:bg-cyan-400 rounded-lg text-black font-semibold transition-all shadow-[0_0_15px_rgba(0,217,255,0.5)] text-xs sm:text-sm"
                 >
                   Contacts
                 </button>
                 <button
                   onClick={() => setShowWalletIframe(false)}
-                  className="p-2 hover:bg-cyan-500/20 rounded-full"
+                  className="p-1.5 sm:p-2 hover:bg-cyan-500/20 rounded-full"
                 >
-                  <X className="w-5 h-5 text-cyan-400" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
                 </button>
               </div>
             </div>
-            <div className="flex-1 relative">
+            <div className="flex-1 relative overflow-hidden">
               <iframe
                 src="https://wallet.kaspa.com"
                 className="w-full h-full border-0"
                 title="KcWallet"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                allow="clipboard-read; clipboard-write"
               />
             </div>
           </motion.div>
