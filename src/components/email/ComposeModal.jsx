@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import ContactsModal from './ContactsModal';
 
 export default function ComposeModal({ 
   isOpen, 
@@ -22,6 +23,7 @@ export default function ComposeModal({
   const [kasAmount, setKasAmount] = useState('');
   const [showKasInput, setShowKasInput] = useState(false);
   const [showWalletIframe, setShowWalletIframe] = useState(false);
+  const [showContacts, setShowContacts] = useState(false);
 
   useEffect(() => {
     if (replyTo) {
@@ -233,24 +235,35 @@ export default function ComposeModal({
                 <Wallet className="w-6 h-6 text-cyan-400" />
                 <h3 className="text-xl font-semibold text-cyan-400">KcWallet</h3>
               </div>
-              {to && (
+              <div className="flex items-center gap-2">
+                {to && (
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(to);
+                      toast.success('Recipient address copied!');
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/50 transition-all"
+                  >
+                    <Copy className="w-4 h-4 text-cyan-400" />
+                    <span className="text-cyan-400 text-sm font-mono">{to.slice(0, 12)}...{to.slice(-8)}</span>
+                  </button>
+                )}
                 <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(to);
-                    toast.success('Recipient address copied!');
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowContacts(true);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg border border-cyan-500/50 transition-all"
+                  className="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 rounded-lg text-black font-semibold transition-all shadow-[0_0_15px_rgba(0,217,255,0.5)]"
                 >
-                  <Copy className="w-4 h-4 text-cyan-400" />
-                  <span className="text-cyan-400 text-sm font-mono">{to.slice(0, 12)}...{to.slice(-8)}</span>
+                  Contacts
                 </button>
-              )}
-              <button
-                onClick={() => setShowWalletIframe(false)}
-                className="p-2 hover:bg-cyan-500/20 rounded-full"
-              >
-                <X className="w-5 h-5 text-cyan-400" />
-              </button>
+                <button
+                  onClick={() => setShowWalletIframe(false)}
+                  className="p-2 hover:bg-cyan-500/20 rounded-full"
+                >
+                  <X className="w-5 h-5 text-cyan-400" />
+                </button>
+              </div>
             </div>
             <div className="flex-1 relative">
               <iframe
@@ -262,6 +275,20 @@ export default function ComposeModal({
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {/* Contacts Modal */}
+      {showContacts && (
+        <ContactsModal
+          isOpen={showContacts}
+          onClose={() => setShowContacts(false)}
+          recipientAddress={to}
+          onSelectContact={(address) => {
+            setTo(address);
+            setShowContacts(false);
+            toast.success('Contact address added!');
+          }}
+        />
       )}
     </AnimatePresence>
   );

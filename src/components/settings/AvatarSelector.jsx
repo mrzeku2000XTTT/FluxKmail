@@ -25,20 +25,19 @@ export default function AvatarSelector({ isOpen, onClose, onSelect, currentAvata
           <DialogTitle className="text-2xl text-cyan-400">Choose Your Avatar</DialogTitle>
         </DialogHeader>
         
-        <div className="grid grid-cols-4 gap-4 p-2">
+        <div className="grid grid-cols-4 gap-3 p-2">
           {avatars.map((index) => (
             <button
               key={index}
               onClick={() => onSelect(index)}
               className={cn(
-                "relative w-full aspect-square rounded-full overflow-hidden border-4 transition-all hover:scale-105 bg-gray-800",
-                currentAvatar === index 
-                  ? "border-cyan-400 shadow-[0_0_20px_rgba(0,217,255,0.6)]" 
-                  : "border-cyan-500/30 hover:border-cyan-400/50"
+                "relative w-full aspect-square rounded-full overflow-hidden bg-gray-800 transition-all",
+                "ring-2 ring-transparent hover:ring-cyan-400/50 hover:shadow-[0_0_10px_rgba(0,217,255,0.4)]",
+                currentAvatar === index && "ring-cyan-400 shadow-[0_0_18px_rgba(0,217,255,0.6)]"
               )}
             >
               <div 
-                className="w-full h-full bg-cover bg-center"
+                className="w-full h-full bg-cover bg-center block"
                 style={getAvatarStyle(index)}
               />
               {currentAvatar === index && (
