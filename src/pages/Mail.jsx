@@ -281,6 +281,7 @@ export default function Mail() {
                 isAllSelected={selectedEmails.length === emails.length && emails.length > 0}
                 totalEmails={emails.length}
                 currentPage={1}
+                onSpam={handleBulkSpam}
                 onDelete={handleBulkDelete}
                 onMarkRead={handleBulkMarkRead}
                 isRefreshing={isRefetching}

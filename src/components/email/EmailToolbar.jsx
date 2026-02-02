@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { 
   RefreshCw, MoreVertical, ChevronLeft, ChevronRight,
-  Archive, AlertOctagon, Trash2, Mail, Clock, Tag
+  AlertOctagon, Trash2, Mail, Clock, Tag
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -19,7 +19,6 @@ export default function EmailToolbar({
   isAllSelected,
   totalEmails,
   currentPage,
-  onArchive,
   onSpam,
   onDelete,
   onMarkRead,
@@ -51,13 +50,10 @@ export default function EmailToolbar({
 
       {selectedCount > 0 ? (
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" onClick={onArchive} className="rounded-full hover:bg-cyan-500/20" title="Archive">
-            <Archive className="w-5 h-5 text-cyan-400" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={onSpam} className="rounded-full hover:bg-cyan-500/20" title="Report spam">
+          <Button variant="ghost" size="icon" onClick={onSpam} className="rounded-full hover:bg-cyan-500/20" title="Move to spam">
             <AlertOctagon className="w-5 h-5 text-cyan-400" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={onDelete} className="rounded-full hover:bg-cyan-500/20" title="Delete">
+          <Button variant="ghost" size="icon" onClick={onDelete} className="rounded-full hover:bg-cyan-500/20" title="Move to trash">
             <Trash2 className="w-5 h-5 text-cyan-400" />
           </Button>
           <div className="w-px h-5 bg-cyan-500/30 mx-1" />
