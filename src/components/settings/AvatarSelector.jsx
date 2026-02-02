@@ -31,7 +31,7 @@ export default function AvatarSelector({ isOpen, onClose, onSelect, currentAvata
               key={index}
               onClick={() => onSelect(index)}
               className={cn(
-                "relative w-full aspect-square rounded-full overflow-hidden bg-gray-800 transition-all",
+                "relative w-full aspect-square rounded-full overflow-hidden transition-all",
                 "ring-2 ring-transparent hover:ring-cyan-400/50 hover:shadow-[0_0_10px_rgba(0,217,255,0.4)]",
                 currentAvatar === index && "ring-cyan-400 shadow-[0_0_18px_rgba(0,217,255,0.6)]"
               )}
