@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
-  Menu, Search, HelpCircle, Settings, Grid3X3, X, SlidersHorizontal, Wallet 
+  Menu, Search, HelpCircle, Grid3X3, X, SlidersHorizontal, Wallet 
 } from 'lucide-react';
 import {
   DropdownMenu,
