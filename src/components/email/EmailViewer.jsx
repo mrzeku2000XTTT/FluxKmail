@@ -4,7 +4,7 @@ import EmailAIChat from './EmailAIChat';
 import { base44 } from '@/api/base44Client';
 import { 
   ArrowLeft, Star, Archive, Trash2, Clock, MoreVertical,
-  Reply, Forward, Printer, ExternalLink, Paperclip, Download, Coins, Shield, ShieldAlert, ShieldCheck, Loader2
+  Reply, Forward, Printer, ExternalLink, Paperclip, Download, Coins, Shield, ShieldAlert, ShieldCheck, Loader2, Bot
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
   const [walletAddress, setWalletAddress] = useState(null);
   const [scanResult, setScanResult] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   useEffect(() => {
     const savedWallet = localStorage.getItem('kmail_wallet');
@@ -70,17 +71,17 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
   return (
     <div className="flex-1 flex flex-col bg-black overflow-hidden">
       {/* Toolbar */}
-      <div className="flex items-center gap-1 px-4 py-2 border-b border-cyan-500/20">
+      <div className="flex items-center gap-1 px-2 md:px-4 py-2 border-b border-cyan-500/20">
         <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full hover:bg-cyan-500/20">
-          <ArrowLeft className="w-5 h-5 text-cyan-400" />
+          <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
         </Button>
         <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
-          <Archive className="w-5 h-5 text-cyan-400" />
+          <Archive className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
         </Button>
         <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20" onClick={onDelete}>
-          <Trash2 className="w-5 h-5 text-cyan-400" />
+          <Trash2 className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20 hidden md:flex">
           <Clock className="w-5 h-5 text-cyan-400" />
         </Button>
         <div className="flex-1" />
@@ -89,54 +90,68 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
           size="sm"
           onClick={handleSecurityScan}
           disabled={isScanning}
-          className="rounded-full hover:bg-cyan-500/20 px-4"
+          className="rounded-full hover:bg-cyan-500/20 px-2 md:px-4"
         >
           {isScanning ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin text-cyan-400" />
+            <Loader2 className="w-4 h-4 md:mr-2 animate-spin text-cyan-400" />
           ) : (
-            <Shield className="w-4 h-4 mr-2 text-cyan-400" />
+            <Shield className="w-4 h-4 md:mr-2 text-cyan-400" />
           )}
-          <span className="text-cyan-400 text-sm">{isScanning ? 'Scanning...' : 'Scan Email'}</span>
+          <span className="text-cyan-400 text-xs md:text-sm hidden md:inline">{isScanning ? 'Scanning...' : 'Scan Email'}</span>
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20 hidden md:flex">
           <Printer className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20 hidden md:flex">
           <ExternalLink className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20 hidden md:flex">
           <MoreVertical className="w-5 h-5 text-cyan-400" />
         </Button>
       </div>
 
       {/* Email Content */}
-      <div className="flex-1 overflow-auto px-6 py-4">
+      <div className="flex-1 overflow-auto px-4 md:px-6 py-4 pb-24 md:pb-4">
         <div className="max-w-4xl">
           {/* Subject */}
           <div className="flex items-start justify-between mb-6">
-            <div className="flex-1">
-              <h1 className="text-2xl font-normal text-white mb-3">{email.subject}</h1>
+            <div className="flex-1 min-w-0 mr-2">
+              <h1 className="text-xl md:text-2xl font-normal text-white mb-3">{email.subject}</h1>
               {email.kas_amount && email.kas_amount > 0 && (
-                <div className="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-4 py-2 w-fit shadow-[0_0_15px_rgba(0,217,255,0.2)]">
-                  <Coins className="w-5 h-5 text-cyan-400" />
-                  <span className="text-cyan-400 font-semibold text-lg">{email.kas_amount} KAS</span>
-                  <span className="text-gray-400 text-sm">sent with this email</span>
+                <div className="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-3 md:px-4 py-2 w-fit shadow-[0_0_15px_rgba(0,217,255,0.2)]">
+                  <Coins className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
+                  <span className="text-cyan-400 font-semibold text-base md:text-lg">{email.kas_amount} KAS</span>
+                  <span className="text-gray-400 text-xs md:text-sm hidden sm:inline">sent with this email</span>
                 </div>
               )}
             </div>
-            <button 
-              onClick={() => onStar(email)}
-              className="p-2 hover:bg-cyan-500/20 rounded-full transition-colors flex-shrink-0"
-            >
-              <Star 
-                className={cn(
-                  "w-5 h-5",
-                  email.is_starred 
-                    ? "fill-cyan-400 text-cyan-400" 
-                    : "text-gray-600 hover:text-cyan-400"
-                )} 
-              />
-            </button>
+            <div className="flex gap-1 flex-shrink-0">
+              {walletAddress && (
+                <button 
+                  onClick={() => setShowAIChat(!showAIChat)}
+                  className={cn(
+                    "p-2 rounded-full transition-colors",
+                    showAIChat ? "bg-cyan-500/20 text-cyan-400" : "hover:bg-cyan-500/20 text-gray-600 hover:text-cyan-400"
+                  )}
+                  title="AI Assistant"
+                >
+                  <Bot className="w-5 h-5" />
+                </button>
+              )}
+              <button 
+                onClick={() => onStar(email)}
+                className="p-2 hover:bg-cyan-500/20 rounded-full transition-colors"
+              >
+                <Star 
+                  className={cn(
+                    "w-5 h-5",
+                    email.is_starred 
+                      ? "fill-cyan-400 text-cyan-400" 
+                      : "text-gray-600 hover:text-cyan-400"
+                  )} 
+                />
+              </button>
+            </div>
           </div>
 
           {/* Sender Info */}
@@ -248,17 +263,17 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
       </div>
 
       {/* Reply Bar */}
-      <div className="px-6 py-4 border-t border-cyan-500/20">
-        <div className="max-w-4xl flex gap-3">
+      <div className="fixed bottom-16 left-0 right-0 md:static px-4 md:px-6 py-3 md:py-4 border-t border-cyan-500/20 bg-black md:bg-transparent z-10">
+        <div className="max-w-4xl flex gap-2 md:gap-3">
           <Button 
             variant="outline" 
             onClick={onReply}
-            className="rounded-full px-6 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400"
+            className="flex-1 md:flex-none rounded-full px-4 md:px-6 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400"
           >
             <Reply className="w-4 h-4 mr-2" />
             Reply
           </Button>
-          <Button variant="outline" className="rounded-full px-6 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400">
+          <Button variant="outline" className="flex-1 md:flex-none rounded-full px-4 md:px-6 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400">
             <Forward className="w-4 h-4 mr-2" />
             Forward
           </Button>
@@ -266,7 +281,7 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
       </div>
 
       {/* AI Chat Assistant */}
-      {walletAddress && <EmailAIChat email={email} walletAddress={walletAddress} />}
+      {walletAddress && showAIChat && <EmailAIChat email={email} walletAddress={walletAddress} />}
     </div>
   );
 }
