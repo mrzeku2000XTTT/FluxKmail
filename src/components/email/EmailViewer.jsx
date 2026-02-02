@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import EmailAIChat from './EmailAIChat';
+import { base44 } from '@/api/base44Client';
 import { 
   ArrowLeft, Star, Archive, Trash2, Clock, MoreVertical,
-  Reply, Forward, Printer, ExternalLink, Paperclip, Download, Coins
+  Reply, Forward, Printer, ExternalLink, Paperclip, Download, Coins, Shield, ShieldAlert, ShieldCheck, Loader2
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
+import { toast } from 'sonner';
 
 export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }) {
   const [walletAddress, setWalletAddress] = useState(null);
+  const [scanResult, setScanResult] = useState(null);
+  const [isScanning, setIsScanning] = useState(false);
 
   useEffect(() => {
     const savedWallet = localStorage.getItem('kmail_wallet');
@@ -17,6 +21,49 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
       setWalletAddress(savedWallet);
     }
   }, []);
+
+  useEffect(() => {
+    setScanResult(null);
+  }, [email?.id]);
+
+  const handleSecurityScan = async () => {
+    setIsScanning(true);
+    try {
+      const { data } = await base44.functions.invoke('scanEmailSecurity', {
+        emailBody: email.body,
+        emailSubject: email.subject
+      });
+      setScanResult(data);
+      toast.success('Security scan complete');
+    } catch (error) {
+      toast.error('Security scan failed');
+      console.error(error);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const getThreatColor = (level) => {
+    switch(level) {
+      case 'SAFE': return 'text-green-400 border-green-500/30 bg-green-500/10';
+      case 'LOW': return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+      case 'MEDIUM': return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
+      case 'HIGH': return 'text-orange-400 border-orange-500/30 bg-orange-500/10';
+      case 'CRITICAL': return 'text-red-400 border-red-500/30 bg-red-500/10';
+      default: return 'text-gray-400 border-gray-500/30 bg-gray-500/10';
+    }
+  };
+
+  const getThreatIcon = (level) => {
+    switch(level) {
+      case 'SAFE': return <ShieldCheck className="w-5 h-5" />;
+      case 'LOW': 
+      case 'MEDIUM': return <Shield className="w-5 h-5" />;
+      case 'HIGH':
+      case 'CRITICAL': return <ShieldAlert className="w-5 h-5" />;
+      default: return <Shield className="w-5 h-5" />;
+    }
+  };
 
   if (!email) return null;
 
@@ -37,6 +84,20 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
           <Clock className="w-5 h-5 text-cyan-400" />
         </Button>
         <div className="flex-1" />
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={handleSecurityScan}
+          disabled={isScanning}
+          className="rounded-full hover:bg-cyan-500/20 px-4"
+        >
+          {isScanning ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin text-cyan-400" />
+          ) : (
+            <Shield className="w-4 h-4 mr-2 text-cyan-400" />
+          )}
+          <span className="text-cyan-400 text-sm">{isScanning ? 'Scanning...' : 'Scan Email'}</span>
+        </Button>
         <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
           <Printer className="w-5 h-5 text-cyan-400" />
         </Button>
@@ -98,6 +159,49 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
               {format(new Date(email.created_date), 'MMM d, yyyy, h:mm a')}
             </div>
           </div>
+
+          {/* Security Scan Results */}
+          {scanResult && (
+            <div className={cn(
+              "mb-6 p-4 rounded-lg border-2",
+              getThreatColor(scanResult.threat_level)
+            )}>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-1">
+                  {getThreatIcon(scanResult.threat_level)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="font-semibold text-lg">Security Scan: {scanResult.threat_level}</span>
+                  </div>
+                  
+                  <p className="text-sm mb-3 opacity-90">{scanResult.explanation}</p>
+                  
+                  {scanResult.threats_found?.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold mb-1 uppercase tracking-wide">Threats Detected:</p>
+                      <ul className="text-sm list-disc list-inside space-y-1">
+                        {scanResult.threats_found.map((threat, idx) => (
+                          <li key={idx}>{threat}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {scanResult.recommendations?.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold mb-1 uppercase tracking-wide">Recommendations:</p>
+                      <ul className="text-sm list-disc list-inside space-y-1">
+                        {scanResult.recommendations.map((rec, idx) => (
+                          <li key={idx}>{rec}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Body */}
           <div 
