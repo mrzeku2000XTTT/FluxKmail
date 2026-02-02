@@ -13,7 +13,7 @@ export default function AvatarSelector({ isOpen, onClose, onSelect, currentAvata
     const col = index % 4;
     return {
       backgroundImage: `url(${AVATAR_GRID_URL})`,
-      backgroundSize: '400% 400%',
+      backgroundSize: '550% 550%',
       backgroundPosition: `${(col / 3) * 100}% ${(row / 3) * 100}%`
     };
   };
