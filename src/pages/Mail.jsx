@@ -187,6 +187,29 @@ export default function Mail() {
     }
   });
 
+  // Save draft mutation
+  const saveDraftMutation = useMutation({
+    mutationFn: async (draftData) => {
+      const kasAmount = draftData.kasAmount ? parseFloat(draftData.kasAmount) : null;
+      
+      return base44.entities.Email.create({
+        from_wallet: walletAddress,
+        to_wallet: draftData.to || '',
+        subject: draftData.subject || '(No Subject)',
+        body: draftData.body?.replace(/\n/g, '<br>') || '',
+        preview: draftData.body?.substring(0, 100) || '',
+        folder: 'drafts',
+        is_read: true,
+        kas_amount: kasAmount
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['emails'] });
+      queryClient.invalidateQueries({ queryKey: ['folderCounts'] });
+      toast.success('Draft saved');
+    }
+  });
+
   const handleSelectEmail = async (email) => {
     setSelectedEmail(email);
     if (!email.is_read && email.to_wallet === walletAddress) {
@@ -326,6 +349,7 @@ export default function Mail() {
           setReplyTo(null);
         }}
         onSend={(data) => sendEmailMutation.mutate(data)}
+        onSaveDraft={(data) => saveDraftMutation.mutate(data)}
         replyTo={replyTo}
         isSending={sendEmailMutation.isPending}
       />
