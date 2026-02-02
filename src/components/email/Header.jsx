@@ -87,11 +87,6 @@ export default function Header({
         <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
           <HelpCircle className="w-5 h-5 text-cyan-400" />
         </Button>
-        <Link to="/Settings">
-          <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
-            <Settings className="w-5 h-5 text-cyan-400" />
-          </Button>
-        </Link>
         <Button variant="ghost" size="icon" className="rounded-full hover:bg-cyan-500/20">
           <Grid3X3 className="w-5 h-5 text-cyan-400" />
         </Button>
