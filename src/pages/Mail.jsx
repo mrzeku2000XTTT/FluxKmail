@@ -119,7 +119,12 @@ export default function Mail() {
 
   // Delete email mutation
   const deleteEmailMutation = useMutation({
-    mutationFn: (id) => base44.entities.Email.update(id, { folder: 'trash' }),
+    mutationFn: ({ id, folder }) => {
+      if (folder === 'trash') {
+        return base44.entities.Email.delete(id);
+      }
+      return base44.entities.Email.update(id, { folder: 'trash' });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['emails'] });
       queryClient.invalidateQueries({ queryKey: ['folderCounts'] });
@@ -213,11 +218,13 @@ export default function Mail() {
   };
 
   const handleBulkDelete = () => {
+    const isInTrash = emails.find(e => selectedEmails.includes(e.id))?.folder === 'trash';
     selectedEmails.forEach(id => {
-      updateEmailMutation.mutate({ id, data: { folder: 'trash' } });
+      const email = emails.find(e => e.id === id);
+      deleteEmailMutation.mutate({ id, folder: email?.folder });
     });
     setSelectedEmails([]);
-    toast.success(`Moved ${selectedEmails.length} email(s) to trash`);
+    toast.success(isInTrash ? `Permanently deleted ${selectedEmails.length} email(s)` : `Moved ${selectedEmails.length} email(s) to trash`);
   };
 
   const handleBulkMarkRead = () => {
@@ -283,7 +290,7 @@ export default function Mail() {
               onBack={() => setSelectedEmail(null)}
               onStar={handleStarEmail}
               onReply={handleReply}
-              onDelete={() => deleteEmailMutation.mutate(selectedEmail.id)}
+              onDelete={() => deleteEmailMutation.mutate({ id: selectedEmail.id, folder: selectedEmail.folder })}
             />
           ) : (
             <>
