@@ -114,7 +114,14 @@ export default function Settings() {
     setAvatarPreset(index);
     setProfilePhoto('');
     setShowAvatarSelector(false);
-    toast.success('Avatar selected!');
+    
+    // Auto-save the avatar selection
+    updateProfileMutation.mutate({
+      display_name: displayName,
+      bio: bio,
+      profile_photo: '',
+      avatar_preset: index
+    });
   };
 
   const getAvatarUrl = () => {
