@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
-  Menu, Search, HelpCircle, Grid3X3, X, SlidersHorizontal, Wallet 
+  Menu, Search, HelpCircle, Grid3X3, X, SlidersHorizontal, Wallet, Settings 
 } from 'lucide-react';
+import { createPageUrl } from '@/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -108,6 +109,12 @@ export default function Header({
             </div>
             <DropdownMenuItem className="py-3 text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400">View on Explorer</DropdownMenuItem>
             <DropdownMenuSeparator className="bg-cyan-500/20" />
+            <Link to={createPageUrl('Settings')}>
+              <DropdownMenuItem className="py-3 text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400">
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-cyan-400 font-medium hover:bg-cyan-500/20">
               Switch Account
             </DropdownMenuItem>
