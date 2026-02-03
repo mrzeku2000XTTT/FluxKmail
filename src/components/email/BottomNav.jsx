@@ -6,6 +6,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 
 const navItems = [
   { id: 'inbox', name: 'Inbox', icon: Inbox },
@@ -21,6 +23,17 @@ export default function BottomNav({
   onCompose, 
   folderCounts = {}
 }) {
+  const walletAddress = localStorage.getItem('kmail_wallet');
+  
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ['isAdmin', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return false;
+      const admins = await base44.entities.Admin.filter({ wallet_address: walletAddress });
+      return admins.length > 0;
+    },
+    enabled: !!walletAddress
+  });
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-cyan-500/20 px-2 py-2 flex items-center justify-around z-50 md:hidden">
       {navItems.map((item) => {
@@ -58,10 +71,12 @@ export default function BottomNav({
         <span className="text-[10px] font-medium">Compose</span>
       </button>
 
-      <Link to={createPageUrl('Settings')} className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-lg text-gray-400">
-        <Settings className="w-5 h-5" />
-        <span className="text-[10px] font-medium">Settings</span>
-      </Link>
+      {isAdmin && (
+        <Link to={createPageUrl('Settings')} className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-lg text-gray-400">
+          <Settings className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Settings</span>
+        </Link>
+      )}
     </nav>
   );
 }

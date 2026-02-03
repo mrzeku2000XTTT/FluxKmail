@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Copy, RefreshCw, Key, AlertCircle } from 'lucide-react';
+import { Copy, RefreshCw, Key, AlertCircle, ShieldX } from 'lucide-react';
 import { toast } from 'sonner';
 import Header from '@/components/email/Header';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Settings() {
   const [apiKey, setApiKey] = useState('');
   const [walletAddress] = useState(() => localStorage.getItem('kmail_wallet'));
+
+  const { data: isAdmin = false, isLoading } = useQuery({
+    queryKey: ['isAdmin', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return false;
+      const admins = await base44.entities.Admin.filter({ wallet_address: walletAddress });
+      return admins.length > 0;
+    },
+    enabled: !!walletAddress
+  });
 
   const generateApiKey = () => {
     // Generate a secure random API key
@@ -25,13 +37,26 @@ export default function Settings() {
     toast.success('API key copied to clipboard!');
   };
 
-  if (!walletAddress) {
+  if (!walletAddress || (!isAdmin && !isLoading)) {
     return (
       <div className="h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <ShieldX className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
-          <p className="text-gray-400">Please connect your wallet first</p>
+          <p className="text-gray-400">
+            {!walletAddress ? 'Please connect your wallet first' : 'Admin access required'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-black">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+          <p className="text-gray-400">Checking permissions...</p>
         </div>
       </div>
     );

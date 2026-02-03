@@ -7,6 +7,8 @@ import {
   Menu, Search, HelpCircle, Grid3X3, X, SlidersHorizontal, Wallet, Settings 
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +25,16 @@ export default function Header({
   onDisconnect
 }) {
   const [isFocused, setIsFocused] = useState(false);
+
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ['isAdmin', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return false;
+      const admins = await base44.entities.Admin.filter({ wallet_address: walletAddress });
+      return admins.length > 0;
+    },
+    enabled: !!walletAddress
+  });
 
   const shortAddress = walletAddress 
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
@@ -109,12 +121,14 @@ export default function Header({
             </div>
             <DropdownMenuItem className="py-3 text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400">View on Explorer</DropdownMenuItem>
             <DropdownMenuSeparator className="bg-cyan-500/20" />
-            <Link to={createPageUrl('Settings')}>
-              <DropdownMenuItem className="py-3 text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </DropdownMenuItem>
-            </Link>
+            {isAdmin && (
+              <Link to={createPageUrl('Settings')}>
+                <DropdownMenuItem className="py-3 text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </DropdownMenuItem>
+              </Link>
+            )}
             <DropdownMenuItem onClick={handleDisconnect} className="py-3 text-cyan-400 font-medium hover:bg-cyan-500/20">
               Switch Account
             </DropdownMenuItem>

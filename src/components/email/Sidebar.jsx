@@ -7,6 +7,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 
 const folders = [
   { id: 'inbox', name: 'Inbox', icon: Inbox },
@@ -26,6 +28,17 @@ export default function Sidebar({
   onLabelClick,
   onCreateLabel
 }) {
+  const walletAddress = localStorage.getItem('kmail_wallet');
+  
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ['isAdmin', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return false;
+      const admins = await base44.entities.Admin.filter({ wallet_address: walletAddress });
+      return admins.length > 0;
+    },
+    enabled: !!walletAddress
+  });
   return (
     <aside className="hidden md:flex w-64 h-full bg-black border-r border-cyan-500/20 flex-col py-4 px-3">
       <div className="flex justify-center mb-6">
@@ -97,14 +110,16 @@ export default function Sidebar({
         </button>
       </nav>
 
-      <div className="pt-4 border-t border-cyan-500/20">
-        <Link to={createPageUrl('Settings')}>
-          <button className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-400 hover:bg-cyan-500/10 hover:text-cyan-400">
-            <Settings className="w-5 h-5" />
-            <span>Settings</span>
-          </button>
-        </Link>
-      </div>
+      {isAdmin && (
+        <div className="pt-4 border-t border-cyan-500/20">
+          <Link to={createPageUrl('Settings')}>
+            <button className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-400 hover:bg-cyan-500/10 hover:text-cyan-400">
+              <Settings className="w-5 h-5" />
+              <span>Settings</span>
+            </button>
+          </Link>
+        </div>
+      )}
     </aside>
   );
 }
