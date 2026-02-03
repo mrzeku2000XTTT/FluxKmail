@@ -1,9 +1,11 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { 
-  Inbox, Send, FileText, Trash2, AlertOctagon, Star, Pencil
+  Inbox, Send, FileText, Trash2, AlertOctagon, Star, Pencil, Settings
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const navItems = [
   { id: 'inbox', name: 'Inbox', icon: Inbox },
@@ -55,6 +57,11 @@ export default function BottomNav({
         <Pencil className="w-5 h-5" />
         <span className="text-[10px] font-medium">Compose</span>
       </button>
+
+      <Link to={createPageUrl('Settings')} className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-lg text-gray-400">
+        <Settings className="w-5 h-5" />
+        <span className="text-[10px] font-medium">Settings</span>
+      </Link>
     </nav>
   );
 }

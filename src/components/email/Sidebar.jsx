@@ -2,9 +2,11 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { 
   Inbox, Send, FileText, Trash2, AlertOctagon, Star, 
-  Tag, Plus, Pencil, ChevronDown 
+  Tag, Plus, Pencil, ChevronDown, Settings 
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const folders = [
   { id: 'inbox', name: 'Inbox', icon: Inbox },
@@ -94,6 +96,15 @@ export default function Sidebar({
           <span>Create new label</span>
         </button>
       </nav>
+
+      <div className="pt-4 border-t border-cyan-500/20">
+        <Link to={createPageUrl('Settings')}>
+          <button className="w-full flex items-center gap-4 px-4 py-2 rounded-r-full transition-all duration-150 text-sm text-gray-400 hover:bg-cyan-500/10 hover:text-cyan-400">
+            <Settings className="w-5 h-5" />
+            <span>Settings</span>
+          </button>
+        </Link>
+      </div>
     </aside>
   );
 }
