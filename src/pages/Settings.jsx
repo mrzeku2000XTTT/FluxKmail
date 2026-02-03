@@ -143,19 +143,44 @@ export default function Settings() {
                       <div className="flex gap-3">
                         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500 text-black font-bold flex items-center justify-center text-xs">2</span>
                         <div>
-                          <p className="font-semibold text-white">Update Vibecode Environment Variable</p>
-                          <p>In your Vibecode app's ENV tab, set:</p>
-                          <p><code className="bg-gray-900 px-2 py-1 rounded text-cyan-400">EXPO_PUBLIC_FLUXKMAIL_API_KEY</code> to the generated key</p>
+                          <p className="font-semibold text-white">Configure Vibecode Environment Variables</p>
+                          <p className="mb-2">In your Vibecode app's ENV tab, add these two variables:</p>
+                          <div className="bg-gray-900 rounded p-3 space-y-2 text-xs">
+                            <div>
+                              <p className="text-gray-400">API Key:</p>
+                              <code className="text-cyan-400">EXPO_PUBLIC_FLUXKMAIL_API_KEY</code>
+                              <p className="text-gray-400 mt-1">Value: <span className="text-white">Copy the API key above</span></p>
+                            </div>
+                            <div className="mt-3">
+                              <p className="text-gray-400">API URL:</p>
+                              <code className="text-cyan-400">EXPO_PUBLIC_FLUXKMAIL_API_URL</code>
+                              <p className="text-gray-400 mt-1">Value: <span className="text-white">https://your-app.base44.app/api/functions/receiveVibecodePin</span></p>
+                              <p className="text-xs text-gray-500 mt-1">Replace 'your-app' with your Fluxkmail app URL</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
                       <div className="flex gap-3">
                         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500 text-black font-bold flex items-center justify-center text-xs">3</span>
                         <div>
-                          <p className="font-semibold text-white">Set Fluxkmail API URL in Vibecode</p>
-                          <p>In your Vibecode app's ENV tab, also set:</p>
-                          <p><code className="bg-gray-900 px-2 py-1 rounded text-cyan-400">EXPO_PUBLIC_FLUXKMAIL_API_URL</code></p>
-                          <p className="text-xs text-gray-400 mt-1">Value: Your Fluxkmail function endpoint URL</p>
+                          <p className="font-semibold text-white">Usage in Vibecode</p>
+                          <p className="mb-2">When sending PIN emails, make this API call:</p>
+                          <div className="bg-gray-900 rounded p-3 text-xs">
+                            <pre className="text-cyan-400 whitespace-pre-wrap">{`fetch(process.env.EXPO_PUBLIC_FLUXKMAIL_API_URL, {
+                      method: 'POST',
+                      headers: {
+                      'Content-Type': 'application/json',
+                      'X-API-Key': process.env.EXPO_PUBLIC_FLUXKMAIL_API_KEY
+                      },
+                      body: JSON.stringify({
+                      recipientAddress: 'kaspa:address...',
+                      pinCode: '123456',
+                      subject: 'Vibecode PIN',
+                      body: 'Your PIN is: 123456'
+                      })
+                      })`}</pre>
+                          </div>
                         </div>
                       </div>
                     </div>
