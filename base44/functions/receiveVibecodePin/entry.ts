@@ -7,17 +7,25 @@ Deno.serve(async (req) => {
         const expectedApiKey = Deno.env.get('VIBECODE_API_KEY');
         
         console.log('[receiveVibecodePin] API key received:', apiKey ? apiKey.slice(0, 10) + '...' : 'MISSING');
-        console.log('[receiveVibecodePin] API key match:', apiKey === expectedApiKey);
+        console.log('[receiveVibecodePin] Expected key starts with:', expectedApiKey ? expectedApiKey.slice(0, 10) + '...' : 'NOT SET');
+        console.log('[receiveVibecodePin] Keys match:', apiKey === expectedApiKey);
         
         if (!apiKey || apiKey !== expectedApiKey) {
-            console.log('[receiveVibecodePin] Unauthorized - key mismatch');
+            console.log('[receiveVibecodePin] Unauthorized - rejecting request');
+            return Response.json(
+                { status: 'error', message: 'Unauthorized: Invalid or missing API key' },
+                { status: 401 }
+            );
+        }
 
         // Parse request body
         const payload = await req.json();
         console.log('[receiveVibecodePin] Payload received:', JSON.stringify(payload));
         const { recipientWalletAddress, pinCode, subject, body, fromName } = payload;
 
+        // Validate required fields
         if (!recipientWalletAddress || !pinCode || !subject || !body) {
+            console.log('[receiveVibecodePin] Missing fields:', { recipientWalletAddress: !!recipientWalletAddress, pinCode: !!pinCode, subject: !!subject, body: !!body });
             return Response.json(
                 { status: 'error', message: 'Missing required fields: recipientWalletAddress, pinCode, subject, body' },
                 { status: 400 }
@@ -38,7 +46,7 @@ Deno.serve(async (req) => {
             folder: 'inbox',
             is_read: false
         });
-        console.log('[receiveVibecodePin] Email created successfully');
+        console.log('[receiveVibecodePin] Email created successfully for:', recipientWalletAddress);
 
         return Response.json(
             { status: 'success', message: 'Verification PIN email sent to Fluxkmail inbox.' },
@@ -46,7 +54,7 @@ Deno.serve(async (req) => {
         );
 
     } catch (error) {
-        console.error('Error in receiveVibecodePin:', error);
+        console.error('[receiveVibecodePin] Error:', error);
         return Response.json(
             { status: 'error', message: error.message || 'Internal server error' },
             { status: 500 }
