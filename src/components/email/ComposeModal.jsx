@@ -89,7 +89,7 @@ export default function ComposeModal({
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 50, opacity: 0 }}
         className={`fixed bottom-0 right-2 sm:right-6 w-full sm:w-[580px] max-w-[calc(100vw-1rem)] bg-gray-900 rounded-t-lg shadow-[0_0_30px_rgba(0,217,255,0.3)] border border-cyan-500/30 z-50 flex flex-col ${
-          isMinimized ? 'h-12' : 'h-[500px] max-h-[70vh]'
+          isMinimized ? 'h-12' : 'h-[calc(60vh)] sm:h-[500px]'
         }`}
       >
         {/* Header */}
@@ -157,7 +157,7 @@ export default function ComposeModal({
             </div>
 
             {/* Toolbar */}
-            <div className="flex items-center justify-between px-4 py-3 border-t border-cyan-500/20">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-cyan-500/20 flex-shrink-0">
               <div className="flex items-center gap-1">
                 <Button 
                   onClick={handleSend}
