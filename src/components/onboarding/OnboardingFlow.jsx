@@ -77,13 +77,15 @@ export default function OnboardingFlow({ onComplete }) {
               <ArrowLeft className="w-4 h-4 mr-1" /> Back
             </Button>
           ) : <div />}
-          <Button
-            onClick={next}
-            className="bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-full px-8 shadow-[0_0_20px_rgba(0,217,255,0.4)]"
-          >
-            {step === totalSteps - 1 ? 'Get Started' : 'Continue'}
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+            <Button
+              onClick={next}
+              className="bg-[#00b7ff] hover:bg-[#33c6ff] text-black font-semibold rounded-full px-8 shadow-[0_0_25px_rgba(0,183,255,0.4)]"
+            >
+              {step === totalSteps - 1 ? 'Get Started' : 'Continue'}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </motion.div>
         </div>
       </div>
 
@@ -95,7 +97,11 @@ export default function OnboardingFlow({ onComplete }) {
 /* --- Browser Tab UI Wrapper (used by all slides) --- */
 function BrowserWindow({ tabs, activeTab, children, url }) {
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-white/10 bg-gray-950 shadow-2xl">
+    <motion.div
+      whileHover={{ scale: 1.02, y: -3 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      className="w-full rounded-2xl overflow-hidden border border-white/10 bg-gray-950 shadow-2xl hover:shadow-[0_0_40px_rgba(0,183,255,0.15)] hover:border-[#00b7ff]/30 transition-all duration-300"
+    >
       {/* Tab bar */}
       <div className="flex items-end gap-1 px-2 pt-2 bg-gray-900">
         {tabs.map((tab, i) => (
@@ -126,12 +132,17 @@ function BrowserWindow({ tabs, activeTab, children, url }) {
       <div className="p-4 min-h-[180px]">
         {children}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 /* --- Slide 1: Welcome --- */
 function SlideWelcome() {
+  const features = [
+    { icon: Inbox, text: 'Inbox, sent, drafts, starred' },
+    { icon: Send, text: 'Compose and reply' },
+    { icon: Search, text: 'Search by wallet address' }
+  ];
   return (
     <div className="flex flex-col px-6 py-6">
       <BrowserWindow tabs={['Fluxkmail', 'Welcome', 'Start']} activeTab={1} url="fluxkmail.app">
@@ -146,9 +157,23 @@ function SlideWelcome() {
           </motion.div>
           <h1 className="text-2xl font-bold text-white mb-2 tracking-tight">Fluxkmail</h1>
           <p className="text-sm text-gray-400 mb-1">Mail for the Kaspa era.</p>
-          <p className="text-xs text-gray-500 max-w-xs">
-            Your wallet is your address. Your inbox is yours. Let's show you how it works.
+          <p className="text-xs text-gray-500 max-w-xs mb-5">
+            Your wallet is your address. Your inbox is yours.
           </p>
+          <div className="w-full space-y-3">
+            {features.map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -15 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + i * 0.12 }}
+                className="flex items-center gap-3 text-sm text-white"
+              >
+                <item.icon className="w-5 h-5 text-[#00b7ff] flex-shrink-0" />
+                {item.text}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </BrowserWindow>
     </div>
@@ -224,10 +249,16 @@ function SlideLikeGmail() {
           { icon: Send, text: 'Compose and reply' },
           { icon: Search, text: 'Search by wallet address' }
         ].map((item, i) => (
-          <div key={i} className="flex items-center gap-3 text-sm text-gray-300">
-            <item.icon className="w-4 h-4 text-cyan-400" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -15 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="flex items-center gap-3 text-sm text-white"
+          >
+            <item.icon className="w-5 h-5 text-[#00b7ff] flex-shrink-0" />
             {item.text}
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
@@ -259,7 +290,7 @@ function SlideUnlikeGmail() {
               className="flex items-start gap-3 p-3 rounded-xl bg-gray-900 border border-white/5"
             >
               <div className="w-9 h-9 rounded-xl bg-cyan-500/15 flex items-center justify-center flex-shrink-0">
-                <d.icon className="w-4.5 h-4.5 text-cyan-400" />
+                <d.icon className="w-5 h-5 text-cyan-400" />
               </div>
               <div>
                 <div className="text-sm font-semibold text-white">{d.title}</div>
@@ -306,7 +337,7 @@ function SlideKaspa() {
               className="flex items-start gap-3"
             >
               <div className="w-9 h-9 rounded-xl bg-cyan-500/15 flex items-center justify-center flex-shrink-0">
-                <f.icon className="w-4.5 h-4.5 text-cyan-400" />
+                <f.icon className="w-5 h-5 text-cyan-400" />
               </div>
               <div>
                 <div className="text-sm font-semibold text-white">{f.title}</div>
@@ -346,7 +377,7 @@ function SlideTTT({ onGetId }) {
               </div>
               <Button
                 onClick={() => setShowIframe(true)}
-                className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-xl"
+                className="w-full bg-[#00b7ff] hover:bg-[#33c6ff] text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(0,183,255,0.3)]"
               >
                 Open Profile <ExternalLink className="w-4 h-4 ml-2" />
               </Button>

@@ -91,13 +91,14 @@ export default function Landing() {
           {/* Desktop nav links */}
           <div className="hidden lg:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <a
+              <motion.a
                 key={link}
                 href="#"
-                className="text-white/80 hover:text-white text-sm tracking-wide transition-colors duration-200"
+                whileHover={{ y: -2 }}
+                className="text-white/80 hover:text-[#00b7ff] text-sm tracking-wide transition-colors duration-200 inline-block"
               >
                 {link}
-              </a>
+              </motion.a>
             ))}
           </div>
 
@@ -163,18 +164,30 @@ export default function Landing() {
               Your wallet is your address. Your inbox is yours.
             </h1>
 
-            <div className="relative mb-8 sm:mb-12 w-full flex justify-center overflow-visible">
-              <span className="four-oh-four text-[80px] xs:text-[100px] sm:text-[140px] md:text-[200px] lg:text-[260px] font-black text-white leading-none tracking-tighter select-none">
-                402
-              </span>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              whileHover={{ scale: 1.03 }}
+              className="relative mb-8 sm:mb-12 w-full flex justify-center overflow-visible cursor-default"
+            >
+              <motion.span
+                animate={{ textShadow: ['0 0 80px rgba(255,255,255,0.3), 0 0 160px rgba(255,255,255,0.1)', '0 0 120px rgba(0,183,255,0.4), 0 0 220px rgba(0,183,255,0.15)', '0 0 80px rgba(255,255,255,0.3), 0 0 160px rgba(255,255,255,0.1)'] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="four-oh-four text-[80px] xs:text-[100px] sm:text-[140px] md:text-[200px] lg:text-[260px] font-black text-white leading-none tracking-tighter select-none"
+              >
+                KX402
+              </motion.span>
+            </motion.div>
 
-            <button
+            <motion.button
               onClick={() => setShowOnboarding(true)}
-              className="liquid-glass text-white text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:opacity-90 transition-opacity"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="bg-[#00b7ff] text-black text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:bg-[#33c6ff] transition-colors shadow-[0_0_30px_rgba(0,183,255,0.4)]"
             >
               Launch Studio
-            </button>
+            </motion.button>
           </motion.div>
         </section>
 
@@ -209,7 +222,7 @@ export default function Landing() {
                   placeholder="Type your TTT ID to sign up"
                   className="flex-1 bg-white text-black text-xs sm:text-sm px-3 py-2 rounded-l-md outline-none min-w-0"
                 />
-                <button className="bg-gradient-to-r from-emerald-400 to-cyan-500 text-white text-xs font-bold tracking-wider px-4 py-2 rounded-r-md hover:opacity-90 transition-opacity">
+                <button className="bg-[#00b7ff] text-black text-xs font-bold tracking-wider px-4 py-2 rounded-r-md hover:bg-[#33c6ff] transition-colors">
                   SEND IT
                 </button>
               </div>
@@ -219,9 +232,14 @@ export default function Landing() {
               </h4>
               <div className="flex items-center gap-3">
                 {SOCIAL_ICONS.map((Icon, i) => (
-                  <a key={i} href="#" className="text-white/50 hover:text-white transition-colors duration-200">
+                  <motion.a
+                    key={i}
+                    href="#"
+                    whileHover={{ scale: 1.3, y: -2 }}
+                    className="text-white/50 hover:text-[#00b7ff] transition-colors duration-200 inline-block"
+                  >
                     <Icon className="w-4 h-4" />
-                  </a>
+                  </motion.a>
                 ))}
               </div>
             </div>
