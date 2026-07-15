@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Menu, X, Mail, Facebook, Twitter, Dribbble, Youtube, Linkedin, Instagram
+  Menu, X, Facebook, Twitter, Dribbble, Youtube, Linkedin, Instagram
 } from 'lucide-react';
+import FluxkmailLogo from '@/components/FluxkmailLogo';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import ConnectWalletModal from '@/components/wallet/ConnectWalletModal';
 
@@ -30,20 +31,6 @@ const FOOTER_COLUMNS = [
 ];
 
 const SOCIAL_ICONS = [Facebook, Twitter, Dribbble, Youtube, Linkedin, Instagram];
-
-function NexovaLogo() {
-  return (
-    <div className="relative w-8 h-8 flex items-center justify-center">
-      <svg viewBox="0 0 480 480" className="absolute inset-0 w-full h-full" fill="white">
-        <path d="M480 240a240 240 0 0 0-240 240 240 240 0 0 0 240-240Z" />
-        <path d="M240 0A240 240 0 0 0 0 240 240 240 0 0 0 240 0Z" />
-        <path d="M480 240A240 240 0 0 0 240 0a240 240 0 0 0 240 240Z" />
-        <path d="M240 480A240 240 0 0 0 0 240a240 240 0 0 0 240 240Z" />
-      </svg>
-      <Mail className="relative z-10 w-4 h-4 text-black" />
-    </div>
-  );
-}
 
 export default function Landing() {
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -97,7 +84,7 @@ export default function Landing() {
         <nav className="flex items-center justify-between px-6 md:px-12 lg:px-16 py-5">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <NexovaLogo />
+            <FluxkmailLogo size={32} />
             <span className="text-white text-xl font-bold tracking-wider">Fluxkmail 402</span>
           </div>
 
@@ -183,7 +170,7 @@ export default function Landing() {
             </div>
 
             <button
-              onClick={() => setShowConnect(true)}
+              onClick={() => setShowOnboarding(true)}
               className="liquid-glass text-white text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:opacity-90 transition-opacity"
             >
               Launch Studio
