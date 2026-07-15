@@ -55,7 +55,7 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
       <DialogContent className="bg-gray-900 border-cyan-500/30 max-w-md shadow-[0_0_50px_rgba(0,217,255,0.3)]">
         <DialogHeader>
           <div className="mx-auto mb-6">
-            <Logo size={80} withGlow />
+            <Logo size={80} />
           </div>
           <DialogTitle className="text-3xl font-bold text-cyan-400 text-center">
             Welcome to Flux Kmail

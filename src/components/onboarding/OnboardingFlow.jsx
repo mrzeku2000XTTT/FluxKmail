@@ -140,7 +140,7 @@ function SlideWelcome() {
         transition={{ type: 'spring', stiffness: 200, damping: 15 }}
         className="mb-6"
       >
-        <Logo size={80} withGlow />
+        <Logo size={80} />
       </motion.div>
       <h1 className="text-3xl font-bold text-white mb-3 tracking-tight">Fluxkmail</h1>
       <p className="text-lg text-gray-400 mb-2">Mail for the Kaspa era.</p>
