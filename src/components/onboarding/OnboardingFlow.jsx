@@ -174,6 +174,21 @@ function SlideWelcome() {
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75 }}
+            className="mt-5 w-full rounded-xl bg-cyan-500/8 border border-cyan-500/20 p-3 flex items-center gap-3"
+          >
+            <div className="w-8 h-8 rounded-lg bg-cyan-500/15 flex items-center justify-center flex-shrink-0">
+              <Lock className="w-4 h-4 text-[#00b7ff]" />
+            </div>
+            <div className="text-left">
+              <div className="text-xs font-semibold text-white">End-to-end encrypted</div>
+              <div className="text-[11px] text-gray-400">No one reads your mail — not even us.</div>
+            </div>
+          </motion.div>
         </div>
       </BrowserWindow>
     </div>
