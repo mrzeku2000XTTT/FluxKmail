@@ -212,7 +212,14 @@ export default function Landing() {
             </motion.div>
 
             <motion.button
-              onClick={() => setShowOnboarding(true)}
+              onClick={() => {
+                const completed = localStorage.getItem(ONBOARDING_KEY);
+                if (!completed) {
+                  setShowOnboarding(true);
+                } else {
+                  setShowConnect(true);
+                }
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               className="bg-[#00b7ff] text-black text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:bg-[#33c6ff] transition-colors shadow-[0_0_30px_rgba(0,183,255,0.4)]"
