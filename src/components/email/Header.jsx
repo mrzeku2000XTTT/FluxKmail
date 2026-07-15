@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
+import FluxkmailLogo from '@/components/FluxkmailLogo';
 import { useQuery } from '@tanstack/react-query';
 import {
   DropdownMenu,
@@ -58,11 +59,7 @@ export default function Header({
       </Button>
 
       <a href="/" className="flex items-center gap-2 mr-2 md:mr-4 flex-shrink-0">
-        <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/7e6911f88_image.png" 
-          alt="Flux Kmail" 
-          className="h-8 md:h-12"
-        />
+        <FluxkmailLogo size={40} />
       </a>
 
       <div className={`flex-1 max-w-2xl relative transition-all duration-200 ${
