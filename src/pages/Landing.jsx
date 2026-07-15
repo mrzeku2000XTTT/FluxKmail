@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import {
   Menu, X, Facebook, Twitter, Dribbble, Youtube, Linkedin, Instagram
 } from 'lucide-react';
 import FluxkmailLogo from '@/components/FluxkmailLogo';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import ConnectWalletModal from '@/components/wallet/ConnectWalletModal';
+import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 
 const ONBOARDING_KEY = 'fluxkmail_onboarding_complete';
@@ -38,6 +40,18 @@ export default function Landing() {
   const [showConnect, setShowConnect] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+
+  const walletAddress = localStorage.getItem('kmail_wallet');
+
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ['isAdmin', walletAddress],
+    queryFn: async () => {
+      if (!walletAddress) return false;
+      const admins = await base44.entities.Admin.filter({ wallet_address: walletAddress });
+      return admins.length > 0;
+    },
+    enabled: !!walletAddress
+  });
 
   useEffect(() => {
     const completed = localStorage.getItem(ONBOARDING_KEY);
@@ -211,21 +225,27 @@ export default function Landing() {
               </motion.span>
             </motion.div>
 
-            <motion.button
-              onClick={() => {
-                const completed = localStorage.getItem(ONBOARDING_KEY);
-                if (!completed) {
-                  setShowOnboarding(true);
-                } else {
-                  setShowConnect(true);
-                }
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="bg-[#00b7ff] text-black text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:bg-[#33c6ff] transition-colors shadow-[0_0_30px_rgba(0,183,255,0.4)]"
-            >
-              Launch Studio
-            </motion.button>
+            {isAdmin ? (
+              <motion.button
+                onClick={() => {
+                  const completed = localStorage.getItem(ONBOARDING_KEY);
+                  if (!completed) {
+                    setShowOnboarding(true);
+                  } else {
+                    setShowConnect(true);
+                  }
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="bg-[#00b7ff] text-black text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:bg-[#33c6ff] transition-colors shadow-[0_0_30px_rgba(0,183,255,0.4)]"
+              >
+                Launch Studio
+              </motion.button>
+            ) : (
+              <div className="text-white/40 text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase border border-white/10 bg-white/5">
+                Coming Soon
+              </div>
+            )}
           </motion.div>
         </section>
 
