@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, Menu, X, Facebook, Twitter, Dribbble, Youtube, Linkedin, Instagram
+  Menu, X, Mail, Facebook, Twitter, Dribbble, Youtube, Linkedin, Instagram
 } from 'lucide-react';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import ConnectWalletModal from '@/components/wallet/ConnectWalletModal';
 
 const ONBOARDING_KEY = 'fluxkmail_onboarding_complete';
 
-const NAV_LINKS = ['Domain', 'Servers', 'Cloud', 'Managed', 'Email', 'Privacy'];
+const NAV_LINKS = ['Inbox', 'Compose', 'Contacts', 'Kaspa', 'TTT ID', 'Security'];
 
 const FOOTER_COLUMNS = [
   {
-    title: 'SERVERS',
-    links: ['Web Servers', 'VPS Servers', 'Cloud Servers', 'Managed Instances', 'Bare Metal']
+    title: 'MAIL',
+    links: ['Inbox', 'Compose', 'Drafts', 'Starred', 'Sent']
   },
   {
-    title: 'DOMAINS',
-    links: ['Find Domain', 'Move Domains', 'DNS Manager', 'Domain Costs']
+    title: 'KASPA',
+    links: ['Wallet', 'Send KAS', 'Transactions', 'Network']
   },
   {
-    title: 'HELP US',
-    links: ['Open a Ticket', 'FAQs', 'Docs', 'Tutorials', 'Forum']
+    title: 'SECURITY',
+    links: ['Encryption', 'Spam Protection', 'Privacy', 'Non-custodial']
   },
   {
     title: 'ABOUT',
-    links: ['Our Story', 'Leadership Team', 'Press Room', 'We Hire', 'Alliance', 'Blog']
+    links: ['Our Story', 'TTT Network', 'Kaspa', 'Blog', 'Alliance']
   }
 ];
 
@@ -33,12 +33,15 @@ const SOCIAL_ICONS = [Facebook, Twitter, Dribbble, Youtube, Linkedin, Instagram]
 
 function NexovaLogo() {
   return (
-    <svg viewBox="0 0 480 480" className="w-8 h-8" fill="white">
-      <path d="M480 240a240 240 0 0 0-240 240 240 240 0 0 0 240-240Z" />
-      <path d="M240 0A240 240 0 0 0 0 240 240 240 0 0 0 240 0Z" />
-      <path d="M480 240A240 240 0 0 0 240 0a240 240 0 0 0 240 240Z" />
-      <path d="M240 480A240 240 0 0 0 0 240a240 240 0 0 0 240 240Z" />
-    </svg>
+    <div className="relative w-8 h-8 flex items-center justify-center">
+      <svg viewBox="0 0 480 480" className="absolute inset-0 w-full h-full" fill="white">
+        <path d="M480 240a240 240 0 0 0-240 240 240 240 0 0 0 240-240Z" />
+        <path d="M240 0A240 240 0 0 0 0 240 240 240 0 0 0 240 0Z" />
+        <path d="M480 240A240 240 0 0 0 240 0a240 240 0 0 0 240 240Z" />
+        <path d="M240 480A240 240 0 0 0 0 240a240 240 0 0 0 240 240Z" />
+      </svg>
+      <Mail className="relative z-10 w-4 h-4 text-black" />
+    </div>
   );
 }
 
@@ -72,8 +75,6 @@ export default function Landing() {
     return <OnboardingFlow onComplete={() => setShowOnboarding(false)} />;
   }
 
-  const linkCount = NAV_LINKS.length;
-
   return (
     <div
       className="relative min-h-screen flex flex-col bg-black"
@@ -97,7 +98,7 @@ export default function Landing() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <NexovaLogo />
-            <span className="text-white text-xl font-bold tracking-wider">FluxkMailx402</span>
+            <span className="text-white text-xl font-bold tracking-wider">Fluxkmail 402</span>
           </div>
 
           {/* Desktop nav links */}
@@ -113,13 +114,7 @@ export default function Landing() {
             ))}
           </div>
 
-          {/* Desktop login button */}
-          <button
-            onClick={() => setShowConnect(true)}
-            className="hidden lg:flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-cyan-500 text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity"
-          >
-            LOG IN <ArrowRight className="w-4 h-4" />
-          </button>
+
 
           {/* Mobile hamburger */}
           <button
@@ -160,19 +155,7 @@ export default function Landing() {
                       {link}
                     </a>
                   ))}
-                  <button
-                    onClick={() => { closeMenu(); setShowConnect(true); }}
-                    className="mt-2 bg-gradient-to-r from-emerald-400 to-cyan-500 text-white text-sm font-semibold px-8 py-2.5 rounded-full"
-                    style={{
-                      opacity: menuVisible ? 1 : 0,
-                      transform: menuVisible ? 'translateY(0)' : 'translateY(12px)',
-                      transitionDelay: `${menuVisible ? 350 + linkCount * 50 : 0}ms`,
-                      transitionTimingFunction: 'ease-out',
-                      transitionDuration: '400ms',
-                    }}
-                  >
-                    LOG IN
-                  </button>
+
                 </div>
               </div>
             </div>
@@ -195,7 +178,7 @@ export default function Landing() {
 
             <div className="relative mb-8 sm:mb-12 w-full flex justify-center overflow-visible">
               <span className="four-oh-four text-[80px] xs:text-[100px] sm:text-[140px] md:text-[200px] lg:text-[260px] font-black text-white leading-none tracking-tighter select-none">
-                404
+                402
               </span>
             </div>
 
@@ -203,7 +186,7 @@ export default function Landing() {
               onClick={() => setShowConnect(true)}
               className="liquid-glass text-white text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:opacity-90 transition-opacity"
             >
-              Return to Main Page
+              Launch Studio
             </button>
           </motion.div>
         </section>
@@ -231,12 +214,12 @@ export default function Landing() {
             {/* Newsletter + Social */}
             <div className="col-span-2 lg:col-span-2">
               <h4 className="text-white text-[10px] sm:text-xs font-bold tracking-[0.15em] mb-3 sm:mb-4">
-                JOIN FOR EXCLUSIVE DEALS
+                JOIN THE NETWORK
               </h4>
               <div className="flex max-w-sm">
                 <input
                   type="email"
-                  placeholder="Type your email to sign up"
+                  placeholder="Type your TTT ID to sign up"
                   className="flex-1 bg-white text-black text-xs sm:text-sm px-3 py-2 rounded-l-md outline-none min-w-0"
                 />
                 <button className="bg-gradient-to-r from-emerald-400 to-cyan-500 text-white text-xs font-bold tracking-wider px-4 py-2 rounded-r-md hover:opacity-90 transition-opacity">
