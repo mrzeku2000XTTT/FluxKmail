@@ -157,10 +157,10 @@ export default function Landing() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-white/80 text-lg xs:text-2xl sm:text-3xl md:text-5xl font-light leading-snug tracking-tight mb-1 sm:mb-2">
-              This page seems to have
+              Mail for the Kaspa era.
             </h1>
             <h1 className="text-white/80 text-lg xs:text-2xl sm:text-3xl md:text-5xl font-light leading-snug tracking-tight mb-8 sm:mb-12">
-              slipped beyond our reach :/
+              Your wallet is your address. Your inbox is yours.
             </h1>
 
             <div className="relative mb-8 sm:mb-12 w-full flex justify-center overflow-visible">
