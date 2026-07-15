@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Wallet, ExternalLink, Hash } from 'lucide-react';
 import TTTLoginForm from './TTTLoginForm';
+import Logo from '@/components/Logo';
 
 export default function ConnectWalletModal({ isOpen, onClose }) {
   const [isConnecting, setIsConnecting] = useState(false);
@@ -53,12 +54,8 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-gray-900 border-cyan-500/30 max-w-md shadow-[0_0_50px_rgba(0,217,255,0.3)]">
         <DialogHeader>
-          <div className="mx-auto w-32 h-32 flex items-center justify-center mb-6">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/a1024d7d4_image.png" 
-              alt="Flux Kmail Logo" 
-              className="w-full h-full object-contain"
-            />
+          <div className="mx-auto mb-6">
+            <Logo size={80} withGlow />
           </div>
           <DialogTitle className="text-3xl font-bold text-cyan-400 text-center">
             Welcome to Flux Kmail

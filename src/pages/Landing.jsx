@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import ConnectWalletModal from '@/components/wallet/ConnectWalletModal';
+import Logo from '@/components/Logo';
 
 const ONBOARDING_KEY = 'fluxkmail_onboarding_complete';
 
@@ -35,12 +36,7 @@ export default function Landing() {
       {/* Header */}
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-black/60 border-b border-white/5">
         <div className="max-w-2xl mx-auto px-5 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center">
-              <Mail className="w-4.5 h-4.5 text-white" />
-            </div>
-            <span className="font-semibold tracking-tight">Fluxkmail</span>
-          </div>
+          <Logo size={32} showWordmark wordmarkClass="font-semibold text-base" />
           <Button
             onClick={() => setShowConnect(true)}
             className="bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-full px-5 text-sm"

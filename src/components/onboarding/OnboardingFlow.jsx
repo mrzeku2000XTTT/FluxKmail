@@ -6,6 +6,7 @@ import {
   ArrowRight, Check, X, Globe, Coins, ArrowLeft, ExternalLink
 } from 'lucide-react';
 import ConnectWalletModal from '@/components/wallet/ConnectWalletModal';
+import Logo from '@/components/Logo';
 
 const STORAGE_KEY = 'fluxkmail_onboarding_complete';
 
@@ -137,9 +138,9 @@ function SlideWelcome() {
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        className="w-20 h-20 rounded-3xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(0,217,255,0.5)]"
+        className="mb-6"
       >
-        <Mail className="w-10 h-10 text-white" />
+        <Logo size={80} withGlow />
       </motion.div>
       <h1 className="text-3xl font-bold text-white mb-3 tracking-tight">Fluxkmail</h1>
       <p className="text-lg text-gray-400 mb-2">Mail for the Kaspa era.</p>
