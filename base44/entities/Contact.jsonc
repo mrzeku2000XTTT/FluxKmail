@@ -1,0 +1,22 @@
+{
+  "name": "Contact",
+  "type": "object",
+  "properties": {
+    "owner_wallet": {
+      "type": "string",
+      "description": "Wallet address of the contact owner"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Display name for the contact"
+    },
+    "kaspa_address": {
+      "type": "string",
+      "description": "Kaspa wallet address of the contact"
+    }
+  },
+  "required": [
+    "owner_wallet",
+    "kaspa_address"
+  ]
+}

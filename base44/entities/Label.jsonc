@@ -1,0 +1,17 @@
+{
+  "name": "Label",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Label name"
+    },
+    "color": {
+      "type": "string",
+      "description": "Label color (hex code)"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

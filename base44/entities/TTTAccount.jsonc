@@ -1,0 +1,31 @@
+{
+  "name": "TTTAccount",
+  "type": "object",
+  "properties": {
+    "ttt_id": {
+      "type": "string",
+      "description": "TTT Agent ID from tttz.xyz"
+    },
+    "password": {
+      "type": "string",
+      "description": "Encrypted password for account"
+    },
+    "main_kaspa_address": {
+      "type": "string",
+      "description": "Primary Kaspa wallet address"
+    },
+    "secondary_kaspa_address": {
+      "type": "string",
+      "description": "Optional secondary Kaspa address for security"
+    },
+    "tertiary_kaspa_address": {
+      "type": "string",
+      "description": "Optional tertiary Kaspa address for additional security"
+    }
+  },
+  "required": [
+    "ttt_id",
+    "password",
+    "main_kaspa_address"
+  ]
+}

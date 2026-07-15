@@ -1,0 +1,23 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "display_name": {
+      "type": "string",
+      "description": "User's display name"
+    },
+    "profile_photo": {
+      "type": "string",
+      "description": "URL to user's profile photo"
+    },
+    "bio": {
+      "type": "string",
+      "description": "User's bio"
+    }
+  },
+  "required": [
+    "display_name",
+    "profile_photo",
+    "bio"
+  ]
+}

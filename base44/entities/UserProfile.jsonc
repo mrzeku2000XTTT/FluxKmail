@@ -1,0 +1,29 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "wallet_address": {
+      "type": "string",
+      "description": "User's Kaspa wallet address (unique identifier)"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "User's display name"
+    },
+    "bio": {
+      "type": "string",
+      "description": "User's bio"
+    },
+    "profile_photo": {
+      "type": "string",
+      "description": "User's profile photo URL or preset avatar index"
+    },
+    "avatar_preset": {
+      "type": "number",
+      "description": "Index of preset avatar (0-15) from avatar grid"
+    }
+  },
+  "required": [
+    "wallet_address"
+  ]
+}

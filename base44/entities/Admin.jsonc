@@ -1,0 +1,13 @@
+{
+  "name": "Admin",
+  "type": "object",
+  "properties": {
+    "wallet_address": {
+      "type": "string",
+      "description": "Admin wallet address"
+    }
+  },
+  "required": [
+    "wallet_address"
+  ]
+}

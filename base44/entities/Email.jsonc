@@ -1,0 +1,91 @@
+{
+  "name": "Email",
+  "type": "object",
+  "properties": {
+    "from_wallet": {
+      "type": "string",
+      "description": "Sender's wallet address"
+    },
+    "from_name": {
+      "type": "string",
+      "description": "Sender's display name"
+    },
+    "to_wallet": {
+      "type": "string",
+      "description": "Recipient's wallet address"
+    },
+    "to_name": {
+      "type": "string",
+      "description": "Recipient's display name"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject line"
+    },
+    "body": {
+      "type": "string",
+      "description": "Email body content (HTML)"
+    },
+    "preview": {
+      "type": "string",
+      "description": "Short preview of the email body"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the email has been read"
+    },
+    "is_starred": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the email is starred"
+    },
+    "folder": {
+      "type": "string",
+      "enum": [
+        "inbox",
+        "sent",
+        "drafts",
+        "trash",
+        "spam"
+      ],
+      "default": "inbox",
+      "description": "Email folder"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Labels attached to the email"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Email attachments"
+    },
+    "kas_amount": {
+      "type": "number",
+      "description": "Amount of KAS sent with the email"
+    }
+  },
+  "required": [
+    "from_wallet",
+    "subject",
+    "body",
+    "folder"
+  ]
+}
