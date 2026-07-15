@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Copy, RefreshCw, Key, AlertCircle, ShieldX } from 'lucide-react';
 import { toast } from 'sonner';
-import Header from '@/components/email/Header';
+import SiteHeader from '@/components/site/SiteHeader';
+import SiteFooter from '@/components/site/SiteFooter';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 
@@ -63,19 +64,9 @@ export default function Settings() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png)' }}>
-      <div className="h-screen flex flex-col bg-black/60 backdrop-blur-sm">
-        <Header 
-          walletAddress={walletAddress}
-          onMenuToggle={() => {}}
-          searchQuery=""
-          onSearchChange={() => {}}
-          onSearch={() => {}}
-          onDisconnect={() => {
-            localStorage.removeItem('kmail_wallet');
-            window.location.reload();
-          }}
-        />
+    <div className="min-h-screen flex flex-col bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69506fa02c99223b93dc5a26/449cf3baf_image.png)' }}>
+      <div className="min-h-screen flex flex-col bg-black/60 backdrop-blur-sm">
+        <SiteHeader />
 
         <div className="flex-1 overflow-auto p-6">
           <div className="max-w-3xl mx-auto">
@@ -196,6 +187,8 @@ export default function Settings() {
             </div>
           </div>
         </div>
+
+        <SiteFooter />
       </div>
     </div>
   );

@@ -4,6 +4,8 @@ import {
   Lock, Shield, Zap, Key, Mail, Wallet, Globe, ArrowRight,
 } from 'lucide-react';
 import CodeBlock from '@/components/whitepaper/CodeBlock';
+import SiteHeader from '@/components/site/SiteHeader';
+import SiteFooter from '@/components/site/SiteFooter';
 
 const SECTIONS = [
   { id: 'abstract', label: 'Abstract' },
@@ -39,20 +41,7 @@ export default function Whitepaper() {
 
   return (
     <div className="min-h-screen bg-black text-gray-200 flex flex-col">
-      {/* Top Bar */}
-      <div className="border-b border-white/10 px-6 py-4 flex items-center justify-between sticky top-0 bg-black/90 backdrop-blur-xl z-50">
-        <div className="flex items-center gap-3">
-          <Lock className="w-5 h-5 text-[#00b7ff]" />
-          <span className="font-semibold text-white text-sm tracking-tight">KX402 Protocol</span>
-          <span className="text-gray-600 text-xs">White Paper v1.0</span>
-        </div>
-        <Link
-          to="/Mail"
-          className="text-xs text-gray-400 hover:text-[#00b7ff] transition-colors flex items-center gap-1.5"
-        >
-          Open App <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
+      <SiteHeader />
 
       <div className="flex flex-1">
         {/* Side Nav */}
@@ -471,15 +460,10 @@ plaintext = AES-GCM.decrypt(aesKey, email.encryption_iv, email.body);`}</CodeBlo
             </ul>
           </Section>
 
-          {/* Footer */}
-          <div className="mt-16 pt-8 border-t border-white/10 flex items-center justify-between text-xs text-gray-600">
-            <div>© 2026 Fluxkmail Research — KX402 White Paper v1.0</div>
-            <Link to="/Mail" className="text-[#00b7ff] hover:text-white transition-colors">
-              Open Fluxkmail →
-            </Link>
-          </div>
         </main>
       </div>
+
+      <SiteFooter />
     </div>
   );
 }
