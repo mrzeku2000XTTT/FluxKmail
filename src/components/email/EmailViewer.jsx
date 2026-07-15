@@ -9,12 +9,17 @@ import {
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils";
 import { toast } from 'sonner';
+import { useEncryption } from '@/lib/EncryptionContext';
+import { decryptMessage } from '@/lib/crypto';
 
 export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }) {
   const [walletAddress, setWalletAddress] = useState(null);
   const [scanResult, setScanResult] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [displayBody, setDisplayBody] = useState('');
+  const [isDecrypting, setIsDecrypting] = useState(false);
+  const { privateKey, isReady } = useEncryption();
 
   useEffect(() => {
     const savedWallet = localStorage.getItem('kmail_wallet');
@@ -26,6 +31,37 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
   useEffect(() => {
     setScanResult(null);
   }, [email?.id]);
+
+  useEffect(() => {
+    const loadBody = async () => {
+      if (!email) return;
+
+      if (email.is_encrypted) {
+        if (!privateKey || !isReady) {
+          setDisplayBody('<p style="color: #f87171; font-style: italic;">🔒 Unlock your encryption keys to read this message.</p>');
+          return;
+        }
+
+        setIsDecrypting(true);
+        try {
+          const decrypted = await decryptMessage(
+            { ciphertext: email.body, iv: email.encryption_iv },
+            privateKey,
+            email.enc_public_key
+          );
+          setDisplayBody(decrypted);
+        } catch (err) {
+          setDisplayBody('<p style="color: #f87171;">Failed to decrypt this message. You may not have the correct keys.</p>');
+        } finally {
+          setIsDecrypting(false);
+        }
+      } else {
+        setDisplayBody(email.body);
+      }
+    };
+
+    loadBody();
+  }, [email, privateKey, isReady]);
 
   const handleSecurityScan = async () => {
     setIsScanning(true);
@@ -219,9 +255,21 @@ export default function EmailViewer({ email, onBack, onStar, onReply, onDelete }
           )}
 
           {/* Body */}
+          {isDecrypting && (
+            <div className="flex items-center gap-2 text-cyan-400/60 text-sm">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Decrypting message...
+            </div>
+          )}
+          {email.is_encrypted && !isDecrypting && (
+            <div className="mb-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-xs text-[#00b7ff]">
+              <Shield className="w-3 h-3" />
+              End-to-end encrypted
+            </div>
+          )}
           <div 
             className="prose prose-sm max-w-none text-gray-300 leading-relaxed prose-headings:text-white prose-a:text-cyan-400 prose-strong:text-white"
-            dangerouslySetInnerHTML={{ __html: email.body }}
+            dangerouslySetInnerHTML={{ __html: displayBody }}
           />
 
           {/* Attachments */}

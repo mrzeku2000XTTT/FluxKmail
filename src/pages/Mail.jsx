@@ -11,6 +11,9 @@ import EmailList from '@/components/email/EmailList';
 import EmailViewer from '@/components/email/EmailViewer';
 import ComposeModal from '@/components/email/ComposeModal';
 import CreateLabelModal from '@/components/email/CreateLabelModal';
+import UnlockEncryptionModal from '@/components/email/UnlockEncryptionModal';
+import { useEncryption } from '@/lib/EncryptionContext';
+import { encryptMessage } from '@/lib/crypto';
 import Landing from './Landing';
 
 export default function Mail() {
@@ -25,6 +28,21 @@ export default function Mail() {
   const [showCreateLabel, setShowCreateLabel] = useState(false);
 
   const queryClient = useQueryClient();
+  const { isReady, privateKey, publicKeyStr, getRecipientPublicKey, initKeys } = useEncryption();
+
+  // Auto-unlock encryption for TTT users (credentials are in localStorage)
+  useEffect(() => {
+    if (walletAddress && !isReady) {
+      const tttId = localStorage.getItem('kmail_ttt_id');
+      const tttAccountStr = localStorage.getItem('kmail_ttt_account');
+      if (tttId && tttAccountStr) {
+        try {
+          const account = JSON.parse(tttAccountStr);
+          initKeys(walletAddress, `${tttId}:${account.password}`);
+        } catch {}
+      }
+    }
+  }, [walletAddress, isReady, initKeys]);
 
   const handleWalletConnect = (address) => {
     setWalletAddress(address);
@@ -145,28 +163,53 @@ export default function Mail() {
   const sendEmailMutation = useMutation({
     mutationFn: async (emailData) => {
       const kasAmount = emailData.kasAmount ? parseFloat(emailData.kasAmount) : null;
-      
-      // Create sent email
+      const bodyHtml = emailData.body.replace(/\n/g, '<br>');
+      const previewText = emailData.body.substring(0, 100);
+
+      // Try E2E encryption if recipient has a public key
+      let encryptedData = null;
+      let recipientPublicKeyStr = null;
+      if (privateKey && publicKeyStr) {
+        const recipientKeyInfo = await getRecipientPublicKey(emailData.to);
+        if (recipientKeyInfo) {
+          const encResult = await encryptMessage(bodyHtml, privateKey, recipientKeyInfo.publicKey);
+          encryptedData = {
+            is_encrypted: true,
+            body: encResult.ciphertext,
+            preview: '🔒 Encrypted message',
+            encryption_iv: encResult.iv,
+          };
+          recipientPublicKeyStr = recipientKeyInfo.publicKeyStr;
+        }
+      }
+
+      const commonFields = encryptedData || {
+        body: bodyHtml,
+        preview: previewText,
+        is_encrypted: false,
+      };
+
+      // Sent email — store recipient's public key so sender can decrypt their own sent copy
       await base44.entities.Email.create({
         from_wallet: walletAddress,
         from_name: emailData.fromName || '',
         to_wallet: emailData.to,
         subject: emailData.subject,
-        body: emailData.body.replace(/\n/g, '<br>'),
-        preview: emailData.body.substring(0, 100),
+        ...commonFields,
+        enc_public_key: encryptedData ? recipientPublicKeyStr : undefined,
         folder: 'sent',
         is_read: true,
         kas_amount: kasAmount
       });
-      
-      // Create received email for recipient
+
+      // Inbox email — store sender's public key so recipient can decrypt
       return base44.entities.Email.create({
         from_wallet: walletAddress,
         from_name: emailData.fromName || '',
         to_wallet: emailData.to,
         subject: emailData.subject,
-        body: emailData.body.replace(/\n/g, '<br>'),
-        preview: emailData.body.substring(0, 100),
+        ...commonFields,
+        enc_public_key: encryptedData ? publicKeyStr : undefined,
         folder: 'inbox',
         is_read: false,
         kas_amount: kasAmount
@@ -374,6 +417,8 @@ export default function Mail() {
           folderCounts={folderCounts}
         />
       </div>
+
+      {walletAddress && !isReady && <UnlockEncryptionModal />}
     </div>
   );
 }

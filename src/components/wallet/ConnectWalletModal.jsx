@@ -3,11 +3,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Wallet, ExternalLink, Hash } from 'lucide-react';
 import TTTLoginForm from './TTTLoginForm';
 import FluxkmailLogo from '@/components/FluxkmailLogo';
+import { useEncryption } from '@/lib/EncryptionContext';
+import { getEncryptionSignMessage } from '@/lib/crypto';
 
 export default function ConnectWalletModal({ isOpen, onClose }) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
   const [useWallet, setUseWallet] = useState(true);
+  const { initKeys } = useEncryption();
 
   const connectKasware = async () => {
     setIsConnecting(true);
@@ -26,7 +29,11 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
         
         const message = `Sign this message to log in to Flux Kmail\n\nWallet: ${address}\nTimestamp: ${Date.now()}`;
         await window.kasware.signMessage(message);
-        
+
+        // Sign to derive E2E encryption keys
+        const encSignature = await window.kasware.signMessage(getEncryptionSignMessage());
+        await initKeys(address, encSignature);
+
         localStorage.setItem('kmail_wallet', address);
         onClose();
         window.location.reload();

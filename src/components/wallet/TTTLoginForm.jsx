@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { base44 } from '@/api/base44Client';
+import { useEncryption } from '@/lib/EncryptionContext';
 import { Hash, Lock, Wallet, HelpCircle, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -19,6 +20,7 @@ export default function TTTLoginForm({ onSuccess, onError }) {
   const [kaspaAddress, setKaspaAddress] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const { initKeys } = useEncryption();
 
   const handleLogin = async () => {
     if (!tttId.trim() || !password.trim()) {
@@ -48,6 +50,7 @@ export default function TTTLoginForm({ onSuccess, onError }) {
       localStorage.setItem('kmail_ttt_id', tttId.trim().toUpperCase());
       localStorage.setItem('kmail_wallet', account.main_kaspa_address);
       localStorage.setItem('kmail_ttt_account', JSON.stringify(account));
+      await initKeys(account.main_kaspa_address, `${tttId.trim().toUpperCase()}:${password}`);
       onSuccess();
     } catch (err) {
       onError(err.message || 'Login failed');
@@ -84,7 +87,9 @@ export default function TTTLoginForm({ onSuccess, onError }) {
       localStorage.setItem('kmail_wallet', kaspaAddress.trim());
       localStorage.setItem('kmail_ttt_account', JSON.stringify(newAccount));
       localStorage.setItem('kmail_new_registration', 'true');
-      
+
+      await initKeys(kaspaAddress.trim(), `${tttId.trim().toUpperCase()}:${password}`);
+
       toast.success('Account created! Add security addresses in Settings.');
       onSuccess();
     } catch (err) {

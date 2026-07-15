@@ -21,6 +21,18 @@
     "avatar_preset": {
       "type": "number",
       "description": "Index of preset avatar (0-15) from avatar grid"
+    },
+    "encryption_public_key": {
+      "type": "string",
+      "description": "ECDH public key (JWK) for end-to-end encryption"
+    },
+    "encrypted_private_key": {
+      "type": "string",
+      "description": "ECDH private key encrypted with a key derived from wallet signature (base64)"
+    },
+    "encryption_key_iv": {
+      "type": "string",
+      "description": "Initialization vector for the encrypted private key (base64)"
     }
   },
   "required": [

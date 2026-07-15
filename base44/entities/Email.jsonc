@@ -24,7 +24,7 @@
     },
     "body": {
       "type": "string",
-      "description": "Email body content (HTML)"
+      "description": "Email body content (HTML or encrypted ciphertext)"
     },
     "preview": {
       "type": "string",
@@ -80,6 +80,19 @@
     "kas_amount": {
       "type": "number",
       "description": "Amount of KAS sent with the email"
+    },
+    "is_encrypted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the email body is end-to-end encrypted"
+    },
+    "encryption_iv": {
+      "type": "string",
+      "description": "Initialization vector for AES-GCM encrypted body (base64)"
+    },
+    "enc_public_key": {
+      "type": "string",
+      "description": "ECDH public key (JWK) needed to derive shared secret for decryption"
     }
   },
   "required": [

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
-import { Star, Paperclip } from 'lucide-react';
+import { Star, Paperclip, Lock } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { format, isToday, isThisYear } from 'date-fns';
 
@@ -86,10 +86,13 @@ export default function EmailList({
                 {email.subject}
               </span>
               <span className="text-gray-500 text-sm truncate">
-                — {email.preview}
+                — {email.is_encrypted ? 'Encrypted message' : email.preview}
               </span>
             </div>
 
+            {email.is_encrypted && (
+              <Lock className="w-4 h-4 text-[#00b7ff] flex-shrink-0" />
+            )}
             {email.attachments?.length > 0 && (
               <Paperclip className="w-4 h-4 text-cyan-400 flex-shrink-0" />
             )}
