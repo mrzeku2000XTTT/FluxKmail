@@ -6,10 +6,11 @@ import {
 import FluxkmailLogo from '@/components/FluxkmailLogo';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import ConnectWalletModal from '@/components/wallet/ConnectWalletModal';
+import { Link } from 'react-router-dom';
 
 const ONBOARDING_KEY = 'fluxkmail_onboarding_complete';
 
-const NAV_LINKS = ['Inbox', 'Compose', 'Contacts', 'Kaspa', 'TTT ID', 'Security'];
+const NAV_LINKS = ['Inbox', 'Compose', 'Contacts', 'Kaspa', 'TTT ID', 'Security', 'White Paper'];
 
 const FOOTER_COLUMNS = [
   {
@@ -90,16 +91,28 @@ export default function Landing() {
 
           {/* Desktop nav links */}
           <div className="hidden lg:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <motion.a
-                key={link}
-                href="#"
-                whileHover={{ y: -2 }}
-                className="text-white/80 hover:text-[#00b7ff] text-sm tracking-wide transition-colors duration-200 inline-block"
-              >
-                {link}
-              </motion.a>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isWhitepaper = link === 'White Paper';
+              return isWhitepaper ? (
+                <motion.div key={link} whileHover={{ y: -2 }}>
+                  <Link
+                    to="/Whitepaper"
+                    className="text-white/80 hover:text-[#00b7ff] text-sm tracking-wide transition-colors duration-200 inline-block"
+                  >
+                    {link}
+                  </Link>
+                </motion.div>
+              ) : (
+                <motion.a
+                  key={link}
+                  href="#"
+                  whileHover={{ y: -2 }}
+                  className="text-white/80 hover:text-[#00b7ff] text-sm tracking-wide transition-colors duration-200 inline-block"
+                >
+                  {link}
+                </motion.a>
+              );
+            })}
           </div>
 
 
@@ -127,22 +140,40 @@ export default function Landing() {
             <div className={`absolute left-0 right-0 top-[68px] z-50 transition-all duration-500 ${menuVisible ? 'opacity-100' : 'opacity-0'}`}>
               <div className="backdrop-blur-xl rounded-b-2xl">
                 <div className="relative z-10 px-6 py-8 flex flex-col items-center gap-5">
-                  {NAV_LINKS.map((link, i) => (
-                    <a
-                      key={link}
-                      href="#"
-                      onClick={closeMenu}
-                      className="text-lg sm:text-xl font-light tracking-[0.08em] text-white/80 hover:text-white transition-all duration-400"
-                      style={{
-                        opacity: menuVisible ? 1 : 0,
-                        transform: menuVisible ? 'translateY(0)' : 'translateY(12px)',
-                        transitionDelay: `${menuVisible ? 350 + i * 50 : 0}ms`,
-                        transitionTimingFunction: 'ease-out',
-                      }}
-                    >
-                      {link}
-                    </a>
-                  ))}
+                  {NAV_LINKS.map((link, i) => {
+                    const isWhitepaper = link === 'White Paper';
+                    return isWhitepaper ? (
+                      <Link
+                        key={link}
+                        to="/Whitepaper"
+                        onClick={closeMenu}
+                        className="text-lg sm:text-xl font-light tracking-[0.08em] text-[#00b7ff] hover:text-white transition-all duration-400"
+                        style={{
+                          opacity: menuVisible ? 1 : 0,
+                          transform: menuVisible ? 'translateY(0)' : 'translateY(12px)',
+                          transitionDelay: `${menuVisible ? 350 + i * 50 : 0}ms`,
+                          transitionTimingFunction: 'ease-out',
+                        }}
+                      >
+                        {link}
+                      </Link>
+                    ) : (
+                      <a
+                        key={link}
+                        href="#"
+                        onClick={closeMenu}
+                        className="text-lg sm:text-xl font-light tracking-[0.08em] text-white/80 hover:text-white transition-all duration-400"
+                        style={{
+                          opacity: menuVisible ? 1 : 0,
+                          transform: menuVisible ? 'translateY(0)' : 'translateY(12px)',
+                          transitionDelay: `${menuVisible ? 350 + i * 50 : 0}ms`,
+                          transitionTimingFunction: 'ease-out',
+                        }}
+                      >
+                        {link}
+                      </a>
+                    );
+                  })}
 
                 </div>
               </div>

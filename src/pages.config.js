@@ -50,12 +50,14 @@
 import Landing from './pages/Landing';
 import Mail from './pages/Mail';
 import Settings from './pages/Settings';
+import Whitepaper from './pages/Whitepaper';
 
 
 export const PAGES = {
     "Landing": Landing,
     "Mail": Mail,
     "Settings": Settings,
+    "Whitepaper": Whitepaper,
 }
 
 export const pagesConfig = {
