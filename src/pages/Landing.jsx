@@ -27,7 +27,9 @@ export default function Landing() {
 
   useEffect(() => {
     const completed = localStorage.getItem(ONBOARDING_KEY);
-    if (!completed) {
+    const hasWallet = localStorage.getItem('kmail_wallet');
+    const hasTTT = localStorage.getItem('kmail_ttt_id');
+    if (!completed && !hasWallet && !hasTTT) {
       const t = setTimeout(() => setShowOnboarding(true), 400);
       return () => clearTimeout(t);
     }
