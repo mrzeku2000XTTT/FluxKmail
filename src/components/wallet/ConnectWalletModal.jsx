@@ -1,16 +1,44 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Wallet, ExternalLink, Hash } from 'lucide-react';
+import { Wallet, ExternalLink, Hash, ShieldCheck } from 'lucide-react';
 import TTTLoginForm from './TTTLoginForm';
 import FluxkmailLogo from '@/components/FluxkmailLogo';
 import { useEncryption } from '@/lib/EncryptionContext';
 import { getEncryptionSignMessage } from '@/lib/crypto';
+import { base44 } from '@/api/base44Client';
 
 export default function ConnectWalletModal({ isOpen, onClose }) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
   const [useWallet, setUseWallet] = useState(true);
+  const [adminMode, setAdminMode] = useState(false);
+  const [adminWallet, setAdminWallet] = useState('');
+  const [verifying, setVerifying] = useState(false);
   const { initKeys } = useEncryption();
+
+  const verifyAdmin = async () => {
+    const addr = adminWallet.trim();
+    if (!addr) {
+      setError('Enter your admin wallet address.');
+      return;
+    }
+    setVerifying(true);
+    setError(null);
+    try {
+      const admins = await base44.entities.Admin.filter({ wallet_address: addr });
+      if (admins.length === 0) {
+        setError('This wallet is not authorized as an admin.');
+        return;
+      }
+      localStorage.setItem('kmail_wallet', addr);
+      onClose();
+      window.location.reload();
+    } catch (err) {
+      setError(err.message || 'Admin verification failed.');
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   const connectKasware = async () => {
     setIsConnecting(true);
@@ -68,7 +96,7 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
             Welcome to Fluxkmail 402
           </DialogTitle>
           <DialogDescription className="text-sm text-white/50 text-center tracking-wide">
-            {useWallet ? 'Connect your Kasware wallet or use TTT ID' : 'Enter your TTT ID to continue'}
+            {adminMode ? 'Enter your admin wallet to bypass wallet login' : useWallet ? 'Connect your Kasware wallet or use TTT ID' : 'Enter your TTT ID to continue'}
           </DialogDescription>
         </DialogHeader>
 
@@ -76,9 +104,9 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
           {/* Toggle Buttons */}
           <div className="flex gap-1 p-1 bg-white/5 rounded-full border border-white/10">
             <button
-              onClick={() => setUseWallet(true)}
+              onClick={() => { setUseWallet(true); setAdminMode(false); }}
               className={`flex-1 py-2.5 rounded-full transition-all text-sm tracking-wide flex items-center justify-center ${
-                useWallet 
+                useWallet && !adminMode
                   ? 'bg-white text-black font-semibold' 
                   : 'text-white/50 hover:text-white/80'
               }`}
@@ -87,9 +115,9 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
               Wallet
             </button>
             <button
-              onClick={() => setUseWallet(false)}
+              onClick={() => { setUseWallet(false); setAdminMode(false); }}
               className={`flex-1 py-2.5 rounded-full transition-all text-sm tracking-wide flex items-center justify-center ${
-                !useWallet 
+                !useWallet && !adminMode
                   ? 'bg-white text-black font-semibold' 
                   : 'text-white/50 hover:text-white/80'
               }`}
@@ -97,9 +125,47 @@ export default function ConnectWalletModal({ isOpen, onClose }) {
               <Hash className="w-4 h-4 mr-2" />
               TTT ID
             </button>
+            <button
+              onClick={() => { setAdminMode(true); setUseWallet(false); }}
+              className={`flex-1 py-2.5 rounded-full transition-all text-sm tracking-wide flex items-center justify-center ${
+                adminMode
+                  ? 'bg-white text-black font-semibold' 
+                  : 'text-white/50 hover:text-white/80'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 mr-2" />
+              Admin
+            </button>
           </div>
 
-          {useWallet ? (
+          {adminMode ? (
+            <div className="space-y-3">
+              <input
+                type="text"
+                value={adminWallet}
+                onChange={(e) => setAdminWallet(e.target.value)}
+                placeholder="kaspa:qz... admin wallet address"
+                className="w-full h-12 rounded-full bg-white/5 border border-white/10 px-5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30"
+              />
+              <button
+                onClick={verifyAdmin}
+                disabled={verifying}
+                className="w-full h-12 rounded-full bg-white text-black text-sm font-semibold tracking-wide hover:opacity-90 transition-opacity flex items-center justify-center disabled:opacity-50"
+              >
+                {verifying ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
+                    Verifying...
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck className="w-5 h-5 mr-2" />
+                    Verify Admin Access
+                  </>
+                )}
+              </button>
+            </div>
+          ) : useWallet ? (
             <>
               <button
                 onClick={connectKasware}
