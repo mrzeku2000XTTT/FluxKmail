@@ -6,12 +6,14 @@ import ConnectWalletModal from '@/components/wallet/ConnectWalletModal';
 import SiteHeader from '@/components/site/SiteHeader';
 import SiteFooter from '@/components/site/SiteFooter';
 import { base44 } from '@/api/base44Client';
+import { useNavigate } from 'react-router-dom';
 
 const ONBOARDING_KEY = 'fluxkmail_onboarding_complete';
 
 export default function Landing() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showConnect, setShowConnect] = useState(false);
+  const navigate = useNavigate();
 
   const walletAddress = localStorage.getItem('kmail_wallet');
 
@@ -89,16 +91,18 @@ export default function Landing() {
               </motion.span>
             </motion.div>
 
-            {isAdmin ? (
+            {!walletAddress ? (
               <motion.button
-                onClick={() => {
-                  const completed = localStorage.getItem(ONBOARDING_KEY);
-                  if (!completed) {
-                    setShowOnboarding(true);
-                  } else {
-                    setShowConnect(true);
-                  }
-                }}
+                onClick={() => setShowConnect(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="bg-[#00b7ff] text-black text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:bg-[#33c6ff] transition-colors shadow-[0_0_30px_rgba(0,183,255,0.4)]"
+              >
+                Launch Studio
+              </motion.button>
+            ) : isAdmin ? (
+              <motion.button
+                onClick={() => navigate('/Mail')}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
                 className="bg-[#00b7ff] text-black text-[10px] xs:text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold px-6 sm:px-8 py-3 sm:py-3.5 rounded-full uppercase hover:bg-[#33c6ff] transition-colors shadow-[0_0_30px_rgba(0,183,255,0.4)]"
